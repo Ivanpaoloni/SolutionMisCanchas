@@ -1,0 +1,33 @@
+﻿@model MisCanchas.Models.UpdateClientViewModel
+
+<h1><i class="bi bi-person-lines-fill"></i> Editar Cliente</h1>
+
+<form method="post" asp-action="View" asp-controller="Clients" class="mt-5">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <label class="form-label">Id</label>
+        <input type="text" class="form-control" asp-for="ClientId" readonly/>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ClientName" class="form-label"></label>
+        <input type="text" class="form-control" asp-for="ClientName" />
+        <span asp-validation-for="ClientName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="NationalIdentityDocument" class="col-form-label"></label>
+        <input type="number" asp-for="NationalIdentityDocument" class="form-control" />
+        <span asp-validation-for="NationalIdentityDocument" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ClientEmail" class="form-label"></label>
+        <input type="email" class="form-control" asp-for="ClientEmail" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="ClientTelephone" class="form-label"></label>
+        <input type="tel" class="form-control" asp-for="ClientTelephone" />
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a asp-action="Delete" asp-controller="Clients" asp-route-id="@Model.ClientId" class="btn btn-danger">Eliminar</a>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>

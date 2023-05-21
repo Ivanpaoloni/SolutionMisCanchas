@@ -1,0 +1,33 @@
+﻿@model MisCanchas.Models.AddClientViewModel
+@{
+    ViewData["Title"] = "Agregar Cliente";
+}
+<h1><i class="bi bi-person-fill-add"></i> Nuevo cliente</h1>
+<hr />
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form method="post" asp-action="Add" asp-controller="Clients">
+
+    <div class="mb-3">
+        <label asp-for="ClientName" class="col-form-label"></label>
+        <input type="text" asp-for="ClientName" class="form-control" />
+        <span asp-validation-for="ClientName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="NationalIdentityDocument" class="col-form-label"></label>
+        <input type="number" asp-for="NationalIdentityDocument" class="form-control" />
+        <span asp-validation-for="NationalIdentityDocument" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ClientEmail" class="col-form-label"></label>
+        <input type="text" asp-for="ClientEmail" class="form-control" />
+        <span asp-validation-for="ClientEmail" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="ClientTelephone" class="col-form-label"></label>
+        <input type="text" asp-for="ClientTelephone" class="form-control" />
+        <span asp-validation-for="ClientTelephone" class="text-danger"></span>
+    </div>
+
+    <button type="submit"  class="btn btn-success">Guardar</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>

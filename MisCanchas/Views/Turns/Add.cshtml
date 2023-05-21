@@ -1,0 +1,25 @@
+﻿@model AddTurnViewModel
+
+
+
+<h1><i class="bi bi-calendar-plus-fill"></i> Reservar turno</h1>
+<hr />
+
+<form method="post" asp-action="Add" asp-controller="Turns">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="ClientId" class="form-label"></label>
+        <select asp-for="ClientId" asp-items="Model.Clients.OrderBy(x=>x.Text)" class="form-select"></select><br />
+        <a class="btn btn-sm btn-success " asp-area="" asp-controller="Clients" asp-action="Add">Nuevo Cliente</a>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="TurnDateTime" class="form-label"></label>
+        <input asp-for="TurnDateTime" class="form-control"/>
+        <span asp-validation-for="TurnDateTime" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+
+</form>
+

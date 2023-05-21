@@ -1,0 +1,33 @@
+﻿@model RegistViewModel
+
+@{
+    ViewData["Title"] = "Registro";
+    Layout = "../shared/_layout";
+}
+
+
+<h1 style="">Crear nuevo usuario</h1>
+
+<form method="post" asp-action="Regist" asp-controller="Users">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" autocomplete="off"/>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" autocomplete="off" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <br />
+
+    <button class="btn btn-success">Confirmar</button>
+    <a asp-action="List" class="btn btn-secondary">Cancelar</a>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

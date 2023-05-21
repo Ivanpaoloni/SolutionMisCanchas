@@ -1,0 +1,38 @@
+﻿@using MisCanchas.Services;
+@{
+    ViewData["Title"] = "Sistem Panel";
+}
+<h1><i class="bi bi-gear-fill"></i> Panel de administración del sistema</h1>
+<br />
+<div class="row">
+    @if (User.IsInRole(Constants.RollAdmin))
+    {
+        <div class="col-sm-6">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle-fill"></i> Gestionar Canchas</h5>
+                    <p class="card-text">Administrar los horarios de las canchas.</p>
+                    <a asp-controller="SistemAdmin" asp-action="FieldsAdjust" class="btn btn-success">Administrar <i class="bi bi-arrow-right-circle-fill"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card text-black bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-person-fill-gear"></i> Gestionar usuarios</h5>
+                    <p class="card-text">Panel exclusivo para administradores.</p>
+                    <a asp-controller="Users" asp-action="List" class="btn btn-warning">Gestion de usuarios <i class="bi bi-arrow-right-circle-fill"></i></a>
+                </div>
+            </div>
+        </div>
+        @*<div class="col-sm-6">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-calendar-week-fill"></i> Turnos</h5>
+                    <p class="card-text">Consultar, reservar y cancelar turnos.</p>
+                    <a asp-controller="Turns" asp-action="Index" class="btn btn-primary">Consultar turnos <i class="bi bi-arrow-right-circle-fill"></i></a>
+                </div>
+            </div>
+        </div>*@
+    }
+</div>

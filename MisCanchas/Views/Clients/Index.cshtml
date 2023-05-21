@@ -1,0 +1,38 @@
+﻿@model IQueryable<MisCanchas.Domain.Entities.Client>
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+<h1><i class="bi bi-people-fill"></i> Clientes</h1>
+<hr />
+<a class="btn btn-success " asp-area="" asp-controller="Clients" asp-action="Add">Nuevo Cliente</a>
+<br />
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.Grid(Model).Named("")
+    </div>
+</div>
+
+@(
+Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => model.ClientName).Titled("Nombre").Sortable(true);
+        columns.Add(model => model.NationalIdentityDocument).Titled("DNI").Sortable(true);
+        columns.Add(model => model.ClientEmail).Titled("Email").Sortable(true);
+        columns.Add(model => model.ClientTelephone).Titled("Telefono").Sortable(true);
+        columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Editar", "View", new { id = o.ClientId }, new { @class = "btn btn-secondary" }));
+    })
+    .Filterable(GridFilterCase.Lower)
+    .Using(GridFilterMode.Header)
+    .Empty("No data found")
+    .Pageable(pager =>{pager.RowsPerPage = 10;})
+)
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

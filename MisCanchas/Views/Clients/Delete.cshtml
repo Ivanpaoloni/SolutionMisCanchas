@@ -1,0 +1,14 @@
+﻿@model MisCanchas.Models.UpdateClientViewModel
+
+<h1>Baja de Usuario</h1>
+<h3 class="mb-3">Seguro que desea borrar el usuario @Model.ClientName ?</h3>
+
+<form asp-action="Delete" asp-controller="Clients">
+    <div class="mb-3">
+        <label class="form-label">Id</label>
+        <input type="text" class="form-control" asp-for="ClientId" readonly />
+    </div>
+    <input  type="hidden" asp-for="ClientId"/>
+    <button type="submit" class="btn btn-danger">Borrar</button>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>

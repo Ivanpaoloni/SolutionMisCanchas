@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MisCanchas</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MisCanchas.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/mvc-grid/mvc-grid.css" />
+    <link rel="stylesheet" href="~/css/customcss/customcss.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="SHORTCUT ICON" href="~/Soccer_icon-icons.com_67819.ico" />
+
+</head>
+<body class="bodyBackground" style="margin-right: 0">
+    <div>
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh">
+            @*<div style="margin-right: 5rem; color: white">
+                <h1>Mis Canchas</h1>
+                <h4>En este sistema podrás administrar de forma rapida y eficaz tus reservas y clientes.</h4>
+            </div>*@
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/mvc-grid/mvc-grid.js"></script>
+    <script>
+        document.querySelectorAll(".mvc-grid").forEach(element => new MvcGrid(element));
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

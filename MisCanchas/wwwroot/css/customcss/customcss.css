@@ -1,0 +1,16 @@
+﻿
+
+.container-bg{
+    background-color:aqua;
+}
+
+.bodyBackground {
+    background-image: url(/img/loginBackground2.jpg);
+    background-size:cover;
+}
+
+.borderBlack {
+    text-shadow: -0px 0 black, 0 0px black, 0.05em 0 black, 0 -0px black;
+    text-shadow: 1px 1px 2px #032104, 0 0 1em #032104, 0 0 0.2em #032104;
+    color: white;
+}

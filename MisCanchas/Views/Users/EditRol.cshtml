@@ -1,0 +1,32 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "Editar Rol de usuario";
+    Layout = "../shared/_layout";
+}
+
+<h1>Editar rol de usuario</h1>
+<hr />
+
+<form method="post">
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" readonly class="form-control" />
+    </div>
+    <div class="mb-3">
+        @if(Model.IsAdmin == false)
+        {
+            <label class="form-label">Administrador: No</label>
+            <br />
+            <button class="btn btn-primary me-2" asp-action="TurnAdmin" asp-route-email="Email">Hacer Admin</button>
+            <a class="btn btn-secondary" asp-action="List">Cancelar</a>
+        }
+        @if (Model.IsAdmin == true)
+        {
+            <label class="form-label">Administrador: Sí</label>
+            <br />
+            <button class="btn btn-danger me-2" asp-action="RemoveAdmin" asp-route-email="Email">Remover Admin</button>
+            <a class="btn btn-secondary" asp-action="List">Cancelar</a>
+        }
+    </div>
+</form>

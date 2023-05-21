@@ -1,0 +1,47 @@
+﻿@model UsersListViewModel
+@{
+    ViewData["Title"] = "Listado de usuarios";
+    Layout = "../shared/_layout";
+}
+
+<h1><i class="bi bi-person-fill-gear"></i> Listado de usuarios</h1>
+<hr />
+<a asp-action="regist" class="btn btn-primary">Crear nuevo usuario</a>
+<br />
+<br />
+
+@if(Model.Message is not null){
+    <div class="alert alert-success" role="alert">
+        @Model.Message
+    </div>
+}
+
+@if (Model.Users is not null){
+
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Grid(Model.Users).Named("")
+        </div>
+    </div>
+
+    @(
+    Html
+            .Grid(Model.Users)
+            .Build(columns =>
+            {
+                columns.Add(model => model.Email).Titled("Usuario").Sortable(true).Filterable(GridFilterCase.Lower);
+                columns.Add(model => model.IsAdmin).Width(30).Titled("Admin").Sortable(true);
+                columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Editar Rol", "EditRol", new  { o.Email }, new { @class = "btn btn-secondary" }));
+        })
+        .Using(GridFilterMode.Header)
+        .Empty("No data found")
+        .Pageable(pager => { pager.RowsPerPage = 10; })
+    )
+
+}else{
+    <p>No hay usuarios para mostrar</p>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
