@@ -72,5 +72,17 @@ namespace MisCanchas.Services
             var turnsq = allTurns.AsQueryable();
             return turnsq;
         }
+
+        ////Turn Selector dbcontext
+        //private Task TurnSelector(string i)
+        //{
+        //    return i switch
+        //    {
+        //        "1" => misCanchasDbContext.Turns,
+        //        "2" => misCanchasDbContext.Turns2,
+        //        "3" => misCanchasDbContext.Turns3,
+        //        _ => null
+        //    };
+        //}
     }
 }
