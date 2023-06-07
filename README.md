@@ -1,5 +1,5 @@
  <h2> (EN PROGRESO)</h2>
-<h1> MisCanchas es un proyecto ASP.MVC .NET Core 7.0 </h1>
+<h1> MisCanchas - ASP.MVC .NET Core 7.0 </h1>
 <br/>
 *Arquitectura Onion
 <br/>
