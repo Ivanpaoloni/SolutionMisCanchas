@@ -16,6 +16,7 @@ Panel de Gestion de Clientes con su respectivo CRUD.
 <br/>
 Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion de usuarios) contra el usuario estandar.
 <hr/>
+
 ![Captura6](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/c17eb385-fbd2-4362-820e-8f1d3fc5ed06)
 ![Captura1](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/7ee66115-e8bd-4794-a3f0-9b5aadc6238c)
 ![Captura2](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/767277e8-1b52-4aac-89ea-4b133c526c84)
