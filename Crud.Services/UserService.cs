@@ -58,5 +58,10 @@ namespace MisCanchas.Services
             return usersq;
         }
 
+        public void CreateDefaultUser()
+        {
+            Create("admin@admin","aA123456");
+        }
+
     }
 }

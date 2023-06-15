@@ -69,6 +69,14 @@ namespace MisCanchas.Controllers
         [AllowAnonymous]
         public IActionResult Login()
         {
+            //if usersList is empty, create an admin user.
+            var usersExist = userService.List().Result.Count();
+            if (usersExist == 0)
+            {
+                userService.CreateDefaultUser();
+                TurnAdmin("admin@admin");
+            }
+
             return View();
         }
 
@@ -146,7 +154,6 @@ namespace MisCanchas.Controllers
             {
                 return NotFound();
             }
-
             await userManager.AddToRoleAsync(user, Constants.RollAdmin);
             return RedirectToAction("List", routeValues: new {message = "Rol asignado correctamente a " + email });
         }
