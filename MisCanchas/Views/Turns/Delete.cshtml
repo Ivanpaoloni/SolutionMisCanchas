@@ -3,7 +3,7 @@
     ViewData["Title"] = "Cancelación de turno";
 }
 
-<h1>Confirmar Cancelación</h1>      
+<h1>Confirmar Cancelación - @ViewBag.FieldName</h1>      
 
 <form asp-action="Delete" asp-controller="Turns">
     <div class="mb-3">
@@ -20,6 +20,11 @@
     <div class="mb-3">
         <label class="form-label">Id de cliente</label>
         <input type="text" class="form-control" asp-for="ClientId" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Precio</label>
+        <input type="text" class="form-control" asp-for="Price" readonly />
     </div>
 
     <button type="submit" class="btn btn-danger">Eliminar</button>

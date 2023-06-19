@@ -22,12 +22,13 @@ namespace MisCanchas.Services
             this.misCanchasDbContext = misCanchasDbContext;
             this.fieldService = fieldService;
         }
-        public async Task Add(DateTime dateTime, int id)
+        public async Task Add(DateTime dateTime, int id, decimal price)
         {
             var turn = new Turn()
             {
                 TurnDateTime = dateTime,
                 ClientId = id,
+                Price = price
             };
             //var duplicateTurn = await misCanchasDbContext.Turns.Find();
             //var duplicateTurn = await misCanchasDbContext.Turns.FirstOrDefaultAsync(t => t.TurnDateTime == addTurnViewModel.TurnDateTime);

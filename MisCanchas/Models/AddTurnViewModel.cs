@@ -13,5 +13,8 @@ namespace MisCanchas.Models
         [Display(Name = "Cliente")]
         public int ClientId { get; set; }
         public IEnumerable<SelectListItem>? Clients { get; set; }
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [Display(Name = "Precio")]
+        public decimal Price { get; set; }
     }
 }

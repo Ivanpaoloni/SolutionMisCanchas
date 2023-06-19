@@ -9,7 +9,7 @@ namespace MisCanchas.Contracts.Services
 {
     public interface ITurnService
     {
-        Task Add(DateTime dateTime, int id);
+        Task Add(DateTime dateTime, int id, decimal price);
         Task<Turn> Get(int id);
         Task<IQueryable<Turn>> GetTurns();
         Task Delete(int id);

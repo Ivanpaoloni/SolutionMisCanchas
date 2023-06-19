@@ -36,6 +36,8 @@ namespace MisCanchas.Controllers
             var field1 = await fieldService.Get();
             field.OpenHour = field1.OpenHour;
             field.CloseHour = field1.CloseHour;
+            field.Name = field1.Name;
+            field.Price = field1.Price;
             return View(field);
         }
 
@@ -48,7 +50,7 @@ namespace MisCanchas.Controllers
                 return View(model);
             }
 
-            await fieldService.Update(model.OpenHour, model.CloseHour);
+            await fieldService.Update(model.OpenHour, model.CloseHour, model.Name, model.Price);
             return RedirectToAction("Index");
 
         }
