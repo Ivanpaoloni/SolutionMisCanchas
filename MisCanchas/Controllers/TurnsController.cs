@@ -104,6 +104,8 @@ namespace MisCanchas.Controllers
             //paso el nombre de la cancha por viewbag
             var fieldName = _fieldService.Get().Result.Name;
             ViewBag.FieldName = fieldName;
+            //paso la ruta actual por vb para volver al turno seleccionado
+            ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
 
             return View(viewModel);
         }

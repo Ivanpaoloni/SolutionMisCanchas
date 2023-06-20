@@ -36,8 +36,10 @@ namespace MisCanchas.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public IActionResult Add( string urlRetorno = null)
         {
+            //addClientViewModel.UrlRetorno = urlRetorno;
+            ViewBag.UrlRetorno = urlRetorno;
             return View();
         }
 
@@ -69,7 +71,16 @@ namespace MisCanchas.Controllers
             };
 
             await _clientService.Add(client);
-            return RedirectToAction("Index");
+
+
+            if (string.IsNullOrEmpty(addClientViewModel.UrlRetorno))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return LocalRedirect(addClientViewModel.UrlRetorno);
+            }
         }
 
         [HttpGet]
