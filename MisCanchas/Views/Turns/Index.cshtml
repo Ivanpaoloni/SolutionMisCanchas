@@ -1,15 +1,17 @@
 ﻿@model IQueryable<MisCanchas.Domain.Entities.Turn>
+
 @{
     ViewData["Title"] = "Turnos";
 }
 
-<h1><i class="bi bi-calendar-week-fill"></i> Turnos</h1>
+<h1><i class="bi bi-calendar-week-fill"></i> Turnos - @ViewBag.FieldName</h1>
 <hr />
 <a class="btn btn-success" asp-area="" asp-controller="Turns" asp-action="Add" asp-route-date="@DateTime.Today"><i class="bi bi-calendar-plus-fill"></i> Nuevo Turno</a>
 <br />
 <br />
 <div id="calendar1"></div>
 <br />
+
 
 @section Scripts {
     <script src="~/lib/fullcalendar/main.min.js"></script>

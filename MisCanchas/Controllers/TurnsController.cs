@@ -14,28 +14,21 @@ namespace MisCanchas.Controllers
         private MisCanchasDbContext _context;
         private readonly IClientService _clientService;
         private readonly ITurnService _turnService;
-        private readonly IFieldService fieldService;
+        private readonly IFieldService _fieldService;
 
         public TurnsController(MisCanchasDbContext context, IClientService clientService, ITurnService turnService, IFieldService fieldService)
         {
             this._context = context;
             this._clientService = clientService;
             this._turnService = turnService;
-            this.fieldService = fieldService;
+            this._fieldService = fieldService;
         }
 
         public async Task<IActionResult> Index()
         {
-            //var turns = await _turnService.GetTurns();
-            //var clients = await _clientService.GetClients();
-            //foreach (var turn in turns)
-            //{
-            //    var client = await _clientService.GetSingleClient(turn.ClientId);
-            //    turn.Client.ClientName = client.ClientName;
-            //    turn.Client.ClientTelephone = client.ClientTelephone;
-            //    turn.Client.ClientEmail = client.ClientEmail;
-            //    turn.Client.NationalIdentityDocument = client.NationalIdentityDocument;
-            //}
+            //paso el nombre de la cancha por viewbag
+            var fieldName = _fieldService.Get().Result.Name;
+            ViewBag.FieldName = fieldName;
             return View();
         }
 
@@ -100,9 +93,18 @@ namespace MisCanchas.Controllers
             {
                 dateTime = dateTime.AddHours(-3); //UTC-3
             }
+
             var viewModel = new AddTurnViewModel();
             viewModel.TurnDateTime = dateTime;
             viewModel.Clients = await GetClients();
+
+            //get turn price from field service
+            viewModel.Price = _fieldService.Get().Result.Price;
+
+            //paso el nombre de la cancha por viewbag
+            var fieldName = _fieldService.Get().Result.Name;
+            ViewBag.FieldName = fieldName;
+
             return View(viewModel);
         }
 
@@ -136,15 +138,15 @@ namespace MisCanchas.Controllers
             }
 
             //validacion de turno seleccionado entre los horarios definidos.
-            int openHour = fieldService.Get().Result.OpenHour;
-            int closeHour = fieldService.Get().Result.CloseHour;
+            int openHour = _fieldService.Get().Result.OpenHour;
+            int closeHour = _fieldService.Get().Result.CloseHour;
             if (addTurnViewModel.TurnDateTime.Hour < openHour && addTurnViewModel.TurnDateTime.Hour > closeHour)
             {
                 addTurnViewModel.Clients = await GetClients();
                 ModelState.AddModelError(nameof(addTurnViewModel.TurnDateTime), $"El turno {addTurnViewModel.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
                 return View(addTurnViewModel);
             }
-            await _turnService.Add(addTurnViewModel.TurnDateTime, addTurnViewModel.ClientId);
+            await _turnService.Add(addTurnViewModel.TurnDateTime, addTurnViewModel.ClientId, addTurnViewModel.Price);
             return RedirectToAction("Index");
         }
 
@@ -164,6 +166,9 @@ namespace MisCanchas.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            //paso el nombre de la cancha por viewbag
+            var fieldName = _fieldService.Get().Result.Name;
+            ViewBag.FieldName = fieldName;
 
             var turnSelected = _turnService.Get(id);
             if (turnSelected != null)
@@ -172,7 +177,8 @@ namespace MisCanchas.Controllers
                 {
                     TurnId = turnSelected.Result.TurnId,
                     TurnDateTime = turnSelected.Result.TurnDateTime,
-                    ClientId = turnSelected.Result.ClientId   
+                    ClientId = turnSelected.Result.ClientId,   
+                    Price = turnSelected.Result.Price
                 };
                 return await Task.Run(() => View("Delete", viewModel));
             }
@@ -200,7 +206,7 @@ namespace MisCanchas.Controllers
         //horario para fullcalendar
         public IActionResult GetTimeRange()
         {
-            var range = fieldService.Get();
+            var range = _fieldService.Get();
             if (range.Result.CloseHour < range.Result.OpenHour)
             {
                 range.Result.CloseHour += 24;

@@ -13,5 +13,6 @@ namespace MisCanchas.Models
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [Display(Name = "Cliente")]
         public int ClientId { get; set; }
+        public decimal Price { get; set; }
     }
 }

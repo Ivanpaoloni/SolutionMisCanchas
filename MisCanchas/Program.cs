@@ -1,12 +1,17 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,7 +60,6 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate();
 }
 
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -72,9 +76,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
-
 app.MapControllerRoute(
-    name: "default",
+name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
