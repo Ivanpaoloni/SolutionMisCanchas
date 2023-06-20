@@ -5,6 +5,10 @@
     @if (SigninManager.IsSignedIn(User))
     {
         <li class="nav-item">
+            <span class="nav-link text-dark">@DateTime.Today.ToShortDateString()</span>
+        </li>
+        
+        <li class="nav-item">
             <span class="nav-link text-dark">Hola, @User.Identity.Name</span>
         </li>
 
