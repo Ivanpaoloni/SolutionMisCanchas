@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
@@ -38,6 +39,11 @@ namespace MisCanchas.Controllers
         [HttpGet]
         public IActionResult Add( string urlRetorno = null)
         {
+            //si la url esta vacia, por defecto redireccionar a /clients.
+            if (urlRetorno is null)
+            {
+                urlRetorno = "/Clients";
+            }
             //addClientViewModel.UrlRetorno = urlRetorno;
             ViewBag.UrlRetorno = urlRetorno;
             return View();
