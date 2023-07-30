@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="~/css/customcss/customcss.css" />
     <link rel="SHORTCUT ICON" href="~/Soccer_icon-icons.com_67819.ico" />
 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+
 </head>
 <body class="">
     <header>
@@ -78,12 +82,14 @@
             @RenderBody()
         </main>
     </div>
+    <div class="container">
+        <footer class="border-top footer text-muted" >
+            <div class="container">
+                &copy; 2023 - MisCanchas - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    </div>
 
-    <footer class="border-top footer text-muted" >
-        <div class="container">
-            &copy; 2023 - MisCanchas - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -92,5 +98,7 @@
         document.querySelectorAll(".mvc-grid").forEach(element => new MvcGrid(element));
     </script>
     @await RenderSectionAsync("Scripts", required: false)
+
+
 </body>
 </html>

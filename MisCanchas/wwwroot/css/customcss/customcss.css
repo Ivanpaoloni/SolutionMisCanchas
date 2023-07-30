@@ -1,4 +1,26 @@
-﻿
+﻿body {
+    font-family: "Open Sans", sans-serif;
+    color: #444444;
+}
+
+a {
+    color: #1acc8d;
+    text-decoration: none;
+}
+
+    a:hover {
+        color: #34e5a6;
+        text-decoration: none;
+    }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Montserrat", sans-serif;
+}
 
 .container-bg{
     background-color:aqua;
