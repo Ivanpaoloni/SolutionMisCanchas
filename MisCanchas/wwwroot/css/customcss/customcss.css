@@ -36,3 +36,8 @@ h6 {
     text-shadow: 1px 1px 2px #032104, 0 0 1em #032104, 0 0 0.2em #032104;
     color: white;
 }
+
+.btn {
+    border-radius: 1rem;
+
+}
