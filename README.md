@@ -1,5 +1,6 @@
  <h2> (EN PROGRESO)</h2>
 <h1> MisCanchas - ASP.MVC .NET Core 7.0 </h1>
+<p>Sistema de gestion de canchas de futbol, con sus respespectivas areas de administracion, CRUD de clientes, CRUD de turnos, CRUD de usuarios, reportes y demas.</p>
 <br/>
 *Arquitectura Onion
 <br/>
