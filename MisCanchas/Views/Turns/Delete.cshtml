@@ -6,9 +6,11 @@
 <h1>Confirmar Cancelación - @ViewBag.FieldName</h1>      
 
 <form asp-action="Delete" asp-controller="Turns">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="mb-3">
         <label asp-for="TurnDateTime" class="form-label"></label>
         <input asp-for="TurnDateTime" readonly class="form-control" />
+        <span asp-validation-for="TurnDateTime" class="text-danger"></span>
     </div>
 
     <div class="mb-3">

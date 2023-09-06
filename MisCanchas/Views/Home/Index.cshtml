@@ -3,8 +3,9 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="card bg-dark text-white">
-    <img class="cardi" style="width: 100% ;height: 15rem;object-fit: cover;" src="/img/loginBackground2.jpg" />
+
+<div class="card text-white">
+    <img class="cardi" style="width: 100% ;height: 14rem;object-fit: cover;" src="/img/loginBackground2.jpg" />
     <div class="card-img-overlay text-center">
         <h1 class="display-4 borderBlack">Bienvenido al Sistema de Gestion de Canchas.</h1>
         <h5 class="display-6 borderBlack">Administrá todo en un solo lugar.</h5>
@@ -13,31 +14,40 @@
 <br />
 <div class="row">
     <div class="col-sm-6">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-body">
+        <div class="card text-white border-success mb-3">
+            <div class="card-body text-success">
                 <h5 class="card-title"><i class="bi bi-people-fill"></i> Clientes</h5>
                 <p class="card-text">Administrar los clientes y toda su información personal.</p>
-                <a asp-controller="Clients" asp-action="Index" class="btn btn-success">Consultar clientes <i class="bi bi-arrow-right-circle-fill"></i></a>
+                <a asp-controller="Clients" asp-action="Index" class="btn border-success text-success">Consultar clientes <i class="bi bi-arrow-right-circle-fill"></i></a>
             </div>
         </div>
     </div>
     <div class="col-sm-6">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-body">
+        <div class="card text-white border-success mb-3">
+            <div class="card-body text-success">
                 <h5 class="card-title"><i class="bi bi-calendar-week-fill"></i> Turnos</h5>
                 <p class="card-text">Consultar, reservar y cancelar turnos.</p>
-                <a asp-controller="Turns" asp-action="Index" class="btn btn-primary">Consultar turnos <i class="bi bi-arrow-right-circle-fill"></i></a>
+                <a asp-controller="Turns" asp-action="Index" class="btn border-success text-success">Consultar turnos <i class="bi bi-arrow-right-circle-fill"></i></a>
             </div>
         </div>
     </div>
     @if (User.IsInRole(Constants.RollAdmin))
     { 
-    <div class="col-sm-12">
-        <div class="card text-black bg-warning mb-3">
-            <div class="card-body">
+    <div class="col-sm-6">
+        <div class="card text-black border-success mb-3">
+            <div class="card-body text-success">
+                    <h5 class="card-title"><i class="bi bi-graph-up"></i> Reportes</h5>
+                <p class="card-text">Reportes sobre ingresos, egresos y otros. Panel exclusivo para administradores.</p>
+                    <a asp-controller="Reports" asp-action="Index" class="btn border-success text-success">Consultar reportes <i class="bi bi-arrow-right-circle-fill"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card text-black border-success mb-3">
+            <div class="card-body text-success">
                     <h5 class="card-title"><i class="bi bi-gear-fill"></i> Administración de sistema</h5>
-                <p class="card-text">Panel exclusivo para administradores.</p>
-                <a asp-controller="SistemAdmin" asp-action="Index" class="btn btn-warning">Administracion de sistema <i class="bi bi-arrow-right-circle-fill"></i></a>
+                <p class="card-text">Ajustes del sistema, y sus respectivos usuarios. Panel exclusivo para administradores.</p>
+                    <a asp-controller="SistemAdmin" asp-action="Index" class="btn border-success text-success">Administracion de sistema <i class="bi bi-arrow-right-circle-fill"></i></a>
             </div>
         </div>
     </div>

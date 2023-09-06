@@ -15,13 +15,15 @@ namespace MisCanchas.Controllers
         private readonly IClientService _clientService;
         private readonly ITurnService _turnService;
         private readonly IFieldService _fieldService;
+        private readonly IReportService reportService;
 
-        public TurnsController(MisCanchasDbContext context, IClientService clientService, ITurnService turnService, IFieldService fieldService)
+        public TurnsController(MisCanchasDbContext context, IClientService clientService, ITurnService turnService, IFieldService fieldService, IReportService reportService)
         {
             this._context = context;
             this._clientService = clientService;
             this._turnService = turnService;
             this._fieldService = fieldService;
+            this.reportService = reportService;
         }
 
         public async Task<IActionResult> Index()
@@ -194,8 +196,13 @@ namespace MisCanchas.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(DeleteTurnViewModel model)
         {
+            if(model.TurnDateTime < DateTime.Now)
+            {
+                ModelState.AddModelError(nameof(model.TurnDateTime), $"La reserva del {model.TurnDateTime} no puede ser eliminada porque ya no se encuentra disponible.");
+                return View(model);
+            }
             await _turnService.Delete(model.TurnId);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index");   
         }
 
         //privates

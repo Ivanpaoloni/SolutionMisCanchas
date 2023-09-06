@@ -8,31 +8,22 @@
     @if (User.IsInRole(Constants.RollAdmin))
     {
         <div class="col-sm-6">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-body">
+            <div class="card text-white border-success mb-3">
+                <div class="card-body text-success">
                     <h5 class="card-title"><i class="bi bi-info-circle-fill"></i> Gestionar Canchas</h5>
                     <p class="card-text">Administrar los horarios de las canchas.</p>
-                    <a asp-controller="SistemAdmin" asp-action="FieldsAdjust" class="btn btn-success">Administrar <i class="bi bi-arrow-right-circle-fill"></i></a>
+                    <a asp-controller="SistemAdmin" asp-action="FieldsAdjust" class="btn border-success text-success">Administrar <i class="bi bi-arrow-right-circle-fill"></i></a>
                 </div>
             </div>
         </div>
         <div class="col-sm-6">
-            <div class="card text-black bg-warning mb-3">
-                <div class="card-body">
+            <div class="card text-black border-success mb-3">
+                <div class="card-body text-success">
                     <h5 class="card-title"><i class="bi bi-person-fill-gear"></i> Gestionar usuarios</h5>
                     <p class="card-text">Panel exclusivo para administradores.</p>
-                    <a asp-controller="Users" asp-action="List" class="btn btn-warning">Gestion de usuarios <i class="bi bi-arrow-right-circle-fill"></i></a>
+                    <a asp-controller="Users" asp-action="List" class="btn border-success text-success">Gestion de usuarios <i class="bi bi-arrow-right-circle-fill"></i></a>
                 </div>
             </div>
         </div>
-        @*<div class="col-sm-6">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-calendar-week-fill"></i> Turnos</h5>
-                    <p class="card-text">Consultar, reservar y cancelar turnos.</p>
-                    <a asp-controller="Turns" asp-action="Index" class="btn btn-primary">Consultar turnos <i class="bi bi-arrow-right-circle-fill"></i></a>
-                </div>
-            </div>
-        </div>*@
     }
 </div>

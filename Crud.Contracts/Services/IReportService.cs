@@ -8,5 +8,6 @@ namespace MisCanchas.Contracts.Services
 {
     public interface IReportService
     {
+        Task<decimal> MonthReport(DateTime start, DateTime end);
     }
 }

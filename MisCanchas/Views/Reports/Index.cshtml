@@ -1,3 +1,37 @@
-﻿@{
+﻿@model MisCanchas.Models.ReportViewModel
+@{
     ViewData["Title"] = "Reports";
 }
+
+<h1><i class="bi bi-graph-up"></i> Reportes de ingresos</h1>
+<br />
+
+<table class="table table-bordered table-hover">
+
+    <caption>Lista de ingresos de los ultimos 3 meses, y el recuento anual corriente.</caption>
+    <thead>
+        <tr>
+            <th scope="col">periodo</th>
+            <th scope="col">Monto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@DateTime.Today.AddMonths(-2).ToString("MMMM")</td>
+            <td>$@Model.secondLastMonth</td>
+        </tr>
+        <tr>
+            <td>@DateTime.Today.AddMonths(-1).ToString("MMMM")</td>
+            <td>$@Model.lastMonth</td>
+        </tr>
+        <tr>
+            <td>@DateTime.Today.ToString("MMMM") (estimado)</td>
+            <td>$@Model.currentMonth</td>
+        </tr>
+        <tr class="table-success">
+            <td>Año @DateTime.Today.Year (estimado)</td>
+            <td>$@Model.currentYear</td>
+        </tr>
+    </tbody>
+</table>
+    
