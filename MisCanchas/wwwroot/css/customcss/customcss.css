@@ -41,3 +41,9 @@ h6 {
     border-radius: 1rem;
 
 }
+
+.i_flex {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}

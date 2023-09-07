@@ -7,21 +7,21 @@
 <div class="row">
     @if (User.IsInRole(Constants.RollAdmin))
     {
-        <div class="col-sm-6">
-            <div class="card text-white border-success mb-3">
-                <div class="card-body text-success">
+        <div class="col-sm-6 mb-4">
+            <div class="card text-white border-success mb-3 h-100">
+                <div class="card-body text-success i_flex">
                     <h5 class="card-title"><i class="bi bi-info-circle-fill"></i> Gestionar Canchas</h5>
                     <p class="card-text">Administrar los horarios de las canchas.</p>
-                    <a asp-controller="SistemAdmin" asp-action="FieldsAdjust" class="btn border-success text-success">Administrar <i class="bi bi-arrow-right-circle-fill"></i></a>
+                    <a asp-controller="SistemAdmin" asp-action="FieldsAdjust" class="btn border-success text-success mt-auto">Administrar <i class="bi bi-arrow-right-circle-fill"></i></a>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
-            <div class="card text-black border-success mb-3">
-                <div class="card-body text-success">
+        <div class="col-sm-6 mb-4">
+            <div class="card text-black border-success mb-3 h-100">
+                <div class="card-body text-success i_flex">
                     <h5 class="card-title"><i class="bi bi-person-fill-gear"></i> Gestionar usuarios</h5>
                     <p class="card-text">Panel exclusivo para administradores.</p>
-                    <a asp-controller="Users" asp-action="List" class="btn border-success text-success">Gestion de usuarios <i class="bi bi-arrow-right-circle-fill"></i></a>
+                    <a asp-controller="Users" asp-action="List" class="btn border-success text-success mt-auto">Gestion de usuarios <i class="bi bi-arrow-right-circle-fill"></i></a>
                 </div>
             </div>
         </div>
