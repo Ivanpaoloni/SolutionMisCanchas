@@ -15,7 +15,7 @@ namespace MisCanchas.Controllers
         private readonly IClientService _clientService;
         private readonly ITurnService _turnService;
         private readonly IFieldService _fieldService;
-        private readonly IReportService reportService;
+        private readonly IReportService _reportService;
 
         public TurnsController(MisCanchasDbContext context, IClientService clientService, ITurnService turnService, IFieldService fieldService, IReportService reportService)
         {
@@ -23,7 +23,7 @@ namespace MisCanchas.Controllers
             this._clientService = clientService;
             this._turnService = turnService;
             this._fieldService = fieldService;
-            this.reportService = reportService;
+            this._reportService = reportService;
         }
 
         public async Task<IActionResult> Index()
@@ -150,6 +150,16 @@ namespace MisCanchas.Controllers
                 ModelState.AddModelError(nameof(addTurnViewModel.TurnDateTime), $"El turno {addTurnViewModel.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
                 return View(addTurnViewModel);
             }
+
+            var report = await _reportService.Get(addTurnViewModel.TurnDateTime);
+            if(report == null)
+            {
+                report.Date = addTurnViewModel.TurnDateTime.Date;
+                report.Amount = addTurnViewModel.Price;
+            }
+            await _reportService.Update(report);
+
+
             await _turnService.Add(addTurnViewModel.TurnDateTime, addTurnViewModel.ClientId, addTurnViewModel.Price);
             return RedirectToAction("Index");
         }

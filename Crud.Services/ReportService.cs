@@ -24,9 +24,17 @@ namespace MisCanchas.Services
         {
             int year = dateTime.Year;
             int month = dateTime.Month;
-            var report = misCanchasDbContext.Reports
+            var report = await misCanchasDbContext.Reports
                 .FirstOrDefaultAsync(t => t.Date.Month == month && t.Date.Year == year);
-            return await report;
+
+            return report;
+        }
+
+        public async Task<IQueryable<Report>> GetAll()
+        {
+            var list = await misCanchasDbContext.Reports.ToListAsync();
+            var listq = list.AsQueryable();
+            return listq;
         }
 
         public async Task<decimal> MonthReport(DateTime start, DateTime end)
@@ -43,8 +51,16 @@ namespace MisCanchas.Services
 
         public async Task Update(Report report)
         {
-            misCanchasDbContext.Reports.Update(report);
-            await misCanchasDbContext.SaveChangesAsync();
+            var reportUpdate = new Report();
+            int year = report.Date.Year;
+            int month = report.Date.Month;
+            DateTime date;
+
+            if(report != null)
+            {
+                misCanchasDbContext.Reports.Update(report);
+                await misCanchasDbContext.SaveChangesAsync();
+            }
         }
     }
 }

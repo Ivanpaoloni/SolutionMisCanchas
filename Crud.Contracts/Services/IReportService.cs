@@ -11,6 +11,7 @@ namespace MisCanchas.Contracts.Services
     {
         Task<decimal> MonthReport(DateTime start, DateTime end);
         Task<Report> Get(DateTime dateTime);
+        Task<IQueryable<Report>> GetAll();
         Task Update(Report report);
     }
 }
