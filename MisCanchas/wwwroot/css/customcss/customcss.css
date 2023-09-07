@@ -42,8 +42,23 @@ h6 {
 
 }
 
+/*clases propias*/ 
 .i_flex {
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+.i_bg-light-success {
+    background-color: #5cba4e23
+}
+
+/*background de tablas de mvc.grid*/ 
+.mvc-grid {
+    background-color: white
+}
+
+/*bacground de tabla de turnos*/ 
+.fc {
+    background-color: white
 }

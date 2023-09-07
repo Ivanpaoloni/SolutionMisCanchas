@@ -20,6 +20,14 @@ namespace MisCanchas.Services
             this._turnService = turnService;
         }
 
+        public async Task<Report> Get(DateTime dateTime)
+        {
+            int year = dateTime.Year;
+            int month = dateTime.Month;
+            var report = misCanchasDbContext.Reports
+                .FirstOrDefaultAsync(t => t.Date.Month == month && t.Date.Year == year);
+            return await report;
+        }
 
         public async Task<decimal> MonthReport(DateTime start, DateTime end)
         {
@@ -31,6 +39,12 @@ namespace MisCanchas.Services
                 turnRevenue += turn.Price;
             }
             return turnRevenue;
+        }
+
+        public async Task Update(Report report)
+        {
+            misCanchasDbContext.Reports.Update(report);
+            await misCanchasDbContext.SaveChangesAsync();
         }
     }
 }

@@ -2,19 +2,20 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
-
-<div class="card text-white">
+<div>
+    <h1 class="display-5 text-center ">Bienvenido.</h1>
+</div>
+@*<div class="card text-white">
     <img class="cardi" style="width: 100% ;height: 14rem;object-fit: cover;" src="/img/loginBackground2.jpg" />
     <div class="card-img-overlay text-center">
         <h1 class="display-4 borderBlack">Bienvenido al Sistema de Gestion de Canchas.</h1>
         <h5 class="display-6 borderBlack">Administrá todo en un solo lugar.</h5>
     </div>
-</div>
+</div>*@
 <br />
-<div class="row">
-    <div class="col-sm-4 mb-4">
-        <div class="card text-white border-success mb-3 h-100">
+<div class="row ">
+    <div class="col-sm-4 mb-4 ">
+        <div class="card text-white border-success mb-3 h-100 shadow p-3 mb-5 rounded">
             <div class="card-body text-success i_flex">
                 <h5 class="card-title"><i class="bi bi-people-fill"></i> Clientes</h5>
                 <p class="card-text">Administrar los clientes y toda su información personal.</p>
@@ -22,8 +23,8 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-4 mb-4">
-        <div class="card text-white border-success mb-3 h-100">
+    <div class="col-sm-4 mb-4 ">
+        <div class="card text-white border-success mb-3 h-100 shadow p-3 mb-5 rounded">
             <div class="card-body text-success i_flex">
                 <h5 class="card-title"><i class="bi bi-calendar-week-fill"></i> Turnos</h5>
                 <p class="card-text">Consultar, reservar y cancelar turnos.</p>
@@ -32,7 +33,7 @@
         </div>
     </div>
     <div class="col-sm-4 mb-4">
-        <div class="card text-black border-success mb-3 h-100" >
+        <div class="card text-black border-success mb-3 h-100 shadow p-3 mb-5 rounded" >
             <div class="card-body text-success i_flex">
                     <h5 class="card-title"><i class="bi bi-graph-up"></i> Reportes</h5>
                 <p class="card-text">Reportes sobre ingresos, egresos y otros.</p>
@@ -43,7 +44,7 @@
     @if (User.IsInRole(Constants.RollAdmin))
     { 
     <div class="col-sm-12 mb-4">
-        <div class="card text-black border-success mb-3">
+            <div class="card text-black border-success mb-3 shadow p-3 mb-5 rounded">
             <div class="card-body text-success">
                     <h5 class="card-title"><i class="bi bi-gear-fill"></i> Administración de sistema</h5>
                 <p class="card-text">Ajustes del sistema, y sus respectivos usuarios. Panel exclusivo para administradores.</p>
