@@ -47,6 +47,7 @@
                                 <li>
                                     <a class="dropdown-item text-dark" asp-area="" asp-controller="Clients" asp-action="Add"><i class="bi bi-person-fill-add"></i> Nuevo cliente</a>
                                 </li>
+                                
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -63,11 +64,12 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="index"><i class="bi bi-graph-up"></i> Reportes</a>
+                        </li>
                         @if (User.IsInRole(Constants.RollAdmin))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="index"><i class="bi bi-graph-up"></i> Reportes</a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="SistemAdmin" asp-action="index"><i class="bi bi-gear-fill"></i> Administración</a>
                             </li>

@@ -35,6 +35,7 @@ namespace MisCanchas.Controllers
             List<ReportViewModel> listModel = new List<ReportViewModel>();
             foreach (var report in list)
             {
+                
                 var reportViewModel = new ReportViewModel();
                 reportViewModel.Id = report.Id;
                 reportViewModel.Amount = report.Amount;
@@ -43,17 +44,27 @@ namespace MisCanchas.Controllers
                 listModel.Add(reportViewModel);
             }
 
-            listModel = listModel.OrderBy(x => x.Date).ToList();
+            // Obtener la fecha actual
+            DateOnly now = DateOnly.FromDateTime(DateTime.Now);
+		    // Calcular la fecha hace seis meses
+		    DateOnly start = now.AddMonths(-6);
+		    // Calcular la fecha dentro de seis meses
+		    DateOnly end = now.AddMonths(6);
+            // Filtrar la lista para incluir solo las fechas dentro del rango
+            List<ReportViewModel> filteredList = listModel.Where(f => f.Date >= start && f.Date <= end) .ToList();
+
+
+			filteredList = filteredList.OrderBy(x => x.Date).ToList();
 
 			List<DataPoint> dataPoints1 = new List<DataPoint>();
-            foreach (var report in listModel)
+            foreach (var report in filteredList)
             {
                 dataPoints1.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Amount)));
             }
 
 			ViewBag.DataPoints1 = JsonConvert.SerializeObject(dataPoints1);
 
-			return View(listModel);
+			return View(filteredList);
         }
 
     }
