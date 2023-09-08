@@ -1,4 +1,4 @@
-![463shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/d264f479-0f68-43da-8924-57d436708f49) <h2> (EN PROGRESO)</h2>
+<h2> (EN PROGRESO)</h2>
 <h1> MisCanchas - ASP.MVC .NET Core 7.0 </h1>
 <p>Sistema de gestion de canchas de futbol, con sus respespectivas areas de administracion, CRUD de clientes, CRUD de turnos, CRUD de usuarios, reportes y demas.</p>
 <br/>
@@ -22,6 +22,7 @@ Panel de Reportes (reportes de ingresos y egresos).
 Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion de usuarios) contra el usuario estandar.
 <hr/>
 MockUps:
+
 ![463shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/1f78aedb-9db4-428e-8bb1-8fcce48db4d8)
 ![31shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/17d57121-349f-47a4-bc00-bc1ce89897fa)
 ![763shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/4843b945-7177-48fd-950c-ea7f1f22c880)
