@@ -23,13 +23,11 @@ Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion
 <hr/>
 
 ![Captura6](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/c17eb385-fbd2-4362-820e-8f1d3fc5ed06)
-![inicio](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/4d114277-e77f-470c-831e-a8896a4e8e09)
-![clientes](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/ef140b6e-fe66-4ca0-b7d4-59e62dc1caf3)
-![AltaCliente](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/1777060d-df57-435f-ae7e-41cc45c10680)
-![turnos](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/44abb7d3-80ad-4a19-9918-c4c9da78dcf9)
-![altaTurno](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/5b2ddcdc-19a7-4a6e-b737-d65e4baecfdb)
-![reportes](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/237c1cde-6af5-491b-bead-c5a3863db933)
-![administracion](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/df049c92-f7d1-4781-a6ef-f471faa79eaf)
-![gestionDeCampo](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/7dd08605-d4e7-484f-a49d-5441793e803d)
-![gestionUsuarios](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/e36cfae8-ac78-4ea8-8f2a-2796e8a4f519)
+![inicio](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/d30efa03-5b14-41e6-a899-7fc530d4b8bf)
+![turnos](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/0eb32a47-1454-480a-814a-38765f6dfc7e)
+![reportes](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/1c06fa5c-de8f-4fba-9b2e-024366c4efa0)![administracion](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/f0e61def-ee54-4e17-84cc-4a70659b0ff7)
+![gestionDeCampo](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/bd6cbaa7-30e4-478f-96e8-a21b7724c037)
+![AltaCliente](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/839e7a77-ff4c-409e-a5b6-65f057929430)
+![clientes](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/6cc427a2-dbfd-4f2a-a72e-1249dd9858cc)
+![altaTurno](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/d4f0b6fe-378d-4d4b-99da-6527c780267c)
 
