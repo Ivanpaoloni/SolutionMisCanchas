@@ -9,15 +9,17 @@
 *Grids con NonFactors.Grid.MVC6. (https://www.nuget.org/packages/NonFactors.Grid.Mvc6)
 <br/>
 *Grilla Horaria con FullCalendar.io Js (https://fullcalendar.io/)
+<br/>
+*Graficos para reportes con  Canva Js (https://canvasjs.com/)
 
 <hr/>
 Panel de Gestion de turnos con grilla horaria ajustada al rango horario determinado. 
 <br/>
 Panel de Gestion de Clientes con su respectivo CRUD. 
 <br/>
-Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion de usuarios) contra el usuario estandar.
+Panel de Reportes (reportes de ingresos y egresos).
 <br/>
-Panel de Reportes exclusivo para Admin de sistema (reportes de ingresos y egresos) contra el usuario estandar.
+Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion de usuarios) contra el usuario estandar.
 <hr/>
 
 ![Captura6](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/c17eb385-fbd2-4362-820e-8f1d3fc5ed06)
