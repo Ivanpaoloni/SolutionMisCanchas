@@ -51,16 +51,8 @@ namespace MisCanchas.Services
 
         public async Task Update(Report report)
         {
-            var reportUpdate = new Report();
-            int year = report.Date.Year;
-            int month = report.Date.Month;
-            DateTime date;
-
-            if(report != null)
-            {
-                misCanchasDbContext.Reports.Update(report);
-                await misCanchasDbContext.SaveChangesAsync();
-            }
+            misCanchasDbContext.Reports.Update(report);
+            await misCanchasDbContext.SaveChangesAsync();
         }
     }
 }

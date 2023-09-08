@@ -1,4 +1,4 @@
-﻿@model MisCanchas.Models.ReportViewModel
+﻿@model List<ReportViewModel>
 @{
     ViewData["Title"] = "Reports";
 }
@@ -6,32 +6,66 @@
 <h1><i class="bi bi-graph-up"></i> Reportes de ingresos</h1>
 <br />
 
-<table class="table table-bordered table-hover bg-white">
+@*reportes graficos *@
 
-    <caption>Lista de ingresos de los ultimos 3 meses, y el recuento anual corriente.</caption>
-    <thead class="">
-        <tr>
-            <th scope="col">periodo</th>
-            <th scope="col">Monto</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>@DateTime.Today.AddMonths(-2).ToString("MMMM")</td>
-            <td class="text-end">$@Model.secondLastMonth</td>
-        </tr>
-        <tr>
-            <td>@DateTime.Today.AddMonths(-1).ToString("MMMM")</td>
-            <td class="text-end">$@Model.lastMonth</td>
-        </tr>
-        <tr>
-            <td>@DateTime.Today.ToString("MMMM") (estimado)</td>
-            <td class="text-end">$@Model.currentMonth</td>
-        </tr>
-        <tr class="table-success">
-            <td>Año @DateTime.Today.Year (estimado)</td>
-            <td class="text-end">$@Model.currentYear</td>
-        </tr>
-    </tbody>
-</table>
-    
+<html>
+<head>
+	<script>
+		window.onload = function () {
+
+			var chart = new CanvasJS.Chart("chartContainer", {
+				animationEnabled: true,
+				title: {
+					text: "Reservas por mes"
+				},
+				toolTip: {
+					shared: true
+				},
+				data: [{
+					type: "line",
+					name: "Monto recaudado",
+					showInLegend: true,
+					dataPoints: @Html.Raw(ViewBag.DataPoints1)
+			
+			}]
+			});
+			chart.render();
+
+		}
+	</script>
+</head>
+<body>
+	<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+	<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+</body>
+</html>
+
+<br />
+@*reportes mvc.grid *@
+
+<div class="row">
+    <div class="col-md-12">
+        @Html.Grid(Model).Named("Reportes Mensuales")
+    </div>
+</div>
+
+@(
+Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => model.Date.Year).Titled("Año").Sortable(true);
+        columns.Add(model => model.Date.Month).Titled("Mes").Sortable(true);
+        columns.Add(model => model.Amount).Titled("Monto").Sortable(true);
+    })
+    .Filterable(GridFilterCase.Lower)
+    .Using(GridFilterMode.Header)
+    .Empty("No data found")
+    .Pageable(pager => { pager.RowsPerPage = 12; })
+)
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}  
+

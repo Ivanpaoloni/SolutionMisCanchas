@@ -151,15 +151,21 @@ namespace MisCanchas.Controllers
                 return View(addTurnViewModel);
             }
 
+            //update del reporte correspondiente.
             var report = await _reportService.Get(addTurnViewModel.TurnDateTime);
             if(report == null)
             {
+                report = new Report();
                 report.Date = addTurnViewModel.TurnDateTime.Date;
                 report.Amount = addTurnViewModel.Price;
+                await _reportService.Update(report);
             }
-            await _reportService.Update(report);
+            else
+            {
+                report.Amount += addTurnViewModel.Price;
+                await _reportService.Update(report);
 
-
+            }
             await _turnService.Add(addTurnViewModel.TurnDateTime, addTurnViewModel.ClientId, addTurnViewModel.Price);
             return RedirectToAction("Index");
         }
@@ -211,6 +217,14 @@ namespace MisCanchas.Controllers
                 ModelState.AddModelError(nameof(model.TurnDateTime), $"La reserva del {model.TurnDateTime} no puede ser eliminada porque ya no se encuentra disponible.");
                 return View(model);
             }
+            //update del reporte correspondiente.
+            var report = await _reportService.Get(model.TurnDateTime);
+            if (report != null)
+            {
+                report.Amount -= model.Price;
+                await _reportService.Update(report);
+            }
+
             await _turnService.Delete(model.TurnId);
             return RedirectToAction("Index");   
         }

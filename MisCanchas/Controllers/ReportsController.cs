@@ -3,6 +3,7 @@ using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
 using MisCanchas.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,25 +30,30 @@ namespace MisCanchas.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            //DateTime currentDay = DateTime.Now;
-            //DateTime start = DateTime.Today.AddDays(-currentDay.Day + 1);
-            //DateTime end = start.AddMonths(1).AddDays(-1);
+            var list = await _reportService.GetAll();
+            var model = new ReportViewModel();
+            List<ReportViewModel> listModel = new List<ReportViewModel>();
+            foreach (var report in list)
+            {
+                var reportViewModel = new ReportViewModel();
+                reportViewModel.Id = report.Id;
+                reportViewModel.Amount = report.Amount;
+                var date = report.Date;
+                reportViewModel.Date = new DateOnly(report.Date.Year, report.Date.Month, report.Date.Day);
+                listModel.Add(reportViewModel);
+            }
 
-            //var currentYear = await _reportService.MonthReport(start.AddMonths(-DateTime.Today.Month+1), start.AddMonths(-DateTime.Today.Month + 1).AddYears(1).AddDays(-1));
-            //var currentMonth = await _reportService.MonthReport(start, end);
-            //var lastMonth = await _reportService.MonthReport(start.AddMonths(-1), end.AddMonths(-1));
-            //var secondLastMonth = await _reportService.MonthReport(start.AddMonths(-2), end.AddMonths(-2));
+            listModel = listModel.OrderBy(x => x.Date).ToList();
 
+			List<DataPoint> dataPoints1 = new List<DataPoint>();
+            foreach (var report in listModel)
+            {
+                dataPoints1.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Amount)));
+            }
 
-            //var viewModel = new ReportViewModel();
-            //viewModel.currentMonth  = currentMonth;
-            //viewModel.lastMonth  = lastMonth;
-            //viewModel.secondLastMonth  = secondLastMonth;
-            //viewModel.currentYear = currentYear;
+			ViewBag.DataPoints1 = JsonConvert.SerializeObject(dataPoints1);
 
-
-
-            return View();
+			return View(listModel);
         }
 
     }
