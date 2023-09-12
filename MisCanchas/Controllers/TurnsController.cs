@@ -157,12 +157,18 @@ namespace MisCanchas.Controllers
             {
                 report = new Report();
                 report.Date = addTurnViewModel.TurnDateTime.Date;
-                report.Amount = addTurnViewModel.Price;
+                report.Amount = addTurnViewModel.Price; //inicializo el balance con el ingreso
+                report.In = addTurnViewModel.Price; //reserva = ingreso de dinero
+                report.Out = 0;
+                report.Canceled = 0;
+                report.Booking = 1; //aumenta el contador de reserva
                 await _reportService.Update(report);
             }
             else
             {
-                report.Amount += addTurnViewModel.Price;
+                report.Amount += addTurnViewModel.Price; //aumenta el acumulador de balance con el ingreso
+                report.In += addTurnViewModel.Price; //aumenta acumulador de ingreso
+                report.Booking++; //aumenta el contador de reserva
                 await _reportService.Update(report);
 
             }
@@ -222,6 +228,8 @@ namespace MisCanchas.Controllers
             if (report != null)
             {
                 report.Amount -= model.Price;
+                report.In -= model.Price;
+                report.Canceled++;
                 await _reportService.Update(report);
             }
 

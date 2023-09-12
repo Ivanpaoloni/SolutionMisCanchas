@@ -9,7 +9,6 @@ namespace MisCanchas.Contracts.Services
 {
     public interface IReportService
     {
-        Task<decimal> MonthReport(DateTime start, DateTime end);
         Task<Report> Get(DateTime dateTime);
         Task<IQueryable<Report>> GetAll();
         Task Update(Report report);

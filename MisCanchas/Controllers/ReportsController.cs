@@ -39,6 +39,10 @@ namespace MisCanchas.Controllers
                 var reportViewModel = new ReportViewModel();
                 reportViewModel.Id = report.Id;
                 reportViewModel.Amount = report.Amount;
+                reportViewModel.In = report.In;
+                reportViewModel.Out = report.Out;
+                reportViewModel.Canceled = report.Canceled;
+                reportViewModel.Booking = report.Booking;
                 var date = report.Date;
                 reportViewModel.Date = new DateOnly(report.Date.Year, report.Date.Month, report.Date.Day);
                 listModel.Add(reportViewModel);
@@ -57,12 +61,18 @@ namespace MisCanchas.Controllers
 			filteredList = filteredList.OrderBy(x => x.Date).ToList();
 
 			List<DataPoint> dataPoints1 = new List<DataPoint>();
+			List<DataPoint> dataPoints2 = new List<DataPoint>();
+			List<DataPoint> dataPoints3 = new List<DataPoint>();
             foreach (var report in filteredList)
             {
                 dataPoints1.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Amount)));
+                dataPoints2.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.In)));
+                dataPoints3.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Out)));
             }
 
 			ViewBag.DataPoints1 = JsonConvert.SerializeObject(dataPoints1);
+			ViewBag.DataPoints2 = JsonConvert.SerializeObject(dataPoints2);
+			ViewBag.DataPoints3 = JsonConvert.SerializeObject(dataPoints3);
 
 			return View(filteredList);
         }

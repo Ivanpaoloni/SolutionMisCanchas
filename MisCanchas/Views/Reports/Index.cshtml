@@ -28,8 +28,17 @@
 					yValueFormatString: "$###",
 					xValueType: "dateTime",
 					dataPoints: @Html.Raw(ViewBag.DataPoints1)
-			
-			}]
+							}, {
+					type: "line",
+					name: "Egresos",
+					showInLegend: true,
+					dataPoints: @Html.Raw(ViewBag.DataPoints3)
+					}, {
+					type: "line",
+					name: "Ingresos",
+					showInLegend: true,
+					dataPoints: @Html.Raw(ViewBag.DataPoints2)
+					}]
 			});
 			chart.render();
 
@@ -56,10 +65,14 @@ Html
     .Grid(Model)
     .Build(columns =>
     {
-        columns.Add(model => model.Date.ToString("MMMM yyyy")).Titled("Fecha").Sortable(false);
-        columns.Add(model => model.Amount).Titled("Monto").Sortable(true);
+		columns.Add(model => model.Date.ToString("MMMM yyyy")).Titled("Fecha").Sortable(false);
+        columns.Add(model => model.Booking).Titled("Reservas").Sortable(true);
+        columns.Add(model => model.Canceled).Titled("Cancelaciones").Sortable(true);
+        columns.Add(model => model.In).Titled("Ingresos").Sortable(true);
+        columns.Add(model => model.Out).Titled("Egresos").Sortable(true);
+        columns.Add(model => model.Amount).Titled("Balance").Sortable(true);
     })
-    .Filterable(GridFilterCase.Lower)
+	@*.Filterable(GridFilterCase.Lower)*@
     .Using(GridFilterMode.Header)
     .Empty("No data found")
     .Pageable(pager => { pager.RowsPerPage = 12; })

@@ -37,20 +37,21 @@ namespace MisCanchas.Services
             return listq;
         }
 
-        public async Task<decimal> MonthReport(DateTime start, DateTime end)
-        {
-            
-            var turns = await _turnService.GetByDateRange(start, end);
-            decimal turnRevenue = 0;
-            foreach (var turn in turns)
-            {
-                turnRevenue += turn.Price;
-            }
-            return turnRevenue;
-        }
 
         public async Task Update(Report report)
         {
+            //var oldReport = await Get(report.Date);
+            //if (oldReport == null)
+            //{ 
+            //    report.Amount += report.In;
+            //}
+            //if (oldReport  != null)
+            //{
+            //    if (report.Amount > oldReport.Amount) 
+            //    { 
+            //    }
+            //}
+
             misCanchasDbContext.Reports.Update(report);
             await misCanchasDbContext.SaveChangesAsync();
         }
