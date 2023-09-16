@@ -40,17 +40,25 @@
                             <li class="d-inline">
                                 <a class="row " href="">
                                     <div class="col-sm-8">
-                                        <p class="text-black mb-0">@m.Name - @m.Description</p>
+                                        <p class="text-black mb-0">@m.Name <span class="text-black-50">(@m.Description)</span></p>
                                         <p class="text-black-50 mb-0">@m.MovementType.Name</p>
                                     </div>
                                     <div class="col-sm-4">
                                         @if(m.MovementType.Incremental == true)
                                         {
-                                            <p class="fw-bold text-end">$@m.Amount</p>
+                                            <p class="fw-bold mb-0 text-end">$@m.Amount</p>
                                         }
                                         else
                                         {
-                                            <p class="fw-bold text-danger text-end">$@m.Amount</p>
+                                            <p class="fw-bold mb-0 text-danger text-end">$@m.Amount</p>
+                                        }
+                                        @if(m.DateTime.Date != DateTime.Today)
+                                        {
+                                            <p class="text-black-50 mb-0 text-end">@m.DateTime.ToString("ddd dd/MM")</p>                                           
+                                        }
+                                        else
+                                        {
+                                            <p class="text-black-50 mb-0 text-end">@m.DateTime.ToShortTimeString()</p>                                           
                                         }
                                     </div>
                                 </a>
