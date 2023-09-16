@@ -34,21 +34,8 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door-fill"></i> Inicio</a>
                         </li>
                         
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-people-fill"></i> Clientes
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="dropdown-item text-dark" asp-area="" asp-controller="Clients" asp-action="Index"><i class="bi bi-people-fill"></i> Ver clientes</a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item text-dark" asp-area="" asp-controller="Clients" asp-action="Add"><i class="bi bi-person-fill-add"></i> Nuevo cliente</a>
-                                </li>
-                                
-                            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Movements" asp-action="index"><i class="bi bi-currency-dollar"></i> Caja</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -65,9 +52,36 @@
                             </ul>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="index"><i class="bi bi-graph-up"></i> Reportes</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-people-fill"></i> Clientes
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item text-dark" asp-area="" asp-controller="Clients" asp-action="Index"><i class="bi bi-people-fill"></i> Ver clientes</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-dark" asp-area="" asp-controller="Clients" asp-action="Add"><i class="bi bi-person-fill-add"></i> Nuevo cliente</a>
+                                </li>
+                                
+                            </ul>
                         </li>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-graph-up"></i> Reportes
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="index"><i class="bi bi-graph-up"></i> Inicio</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Month"><i class="bi bi-graph-up"></i> Reportes Mensuales</a>
+                            </ul>
+                        </li>
+
                         @if (User.IsInRole(Constants.RollAdmin))
                         {
                             <li class="nav-item">

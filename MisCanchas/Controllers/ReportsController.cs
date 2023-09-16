@@ -27,8 +27,14 @@ namespace MisCanchas.Controllers
             this._fieldService = fieldService;
             this._reportService = reportService;
         }
-        [HttpGet]
-        public async Task<IActionResult> Index()
+
+		public async Task<IActionResult> Index()
+		{
+
+			return View();
+		}
+		[HttpGet]
+        public async Task<IActionResult> Month()
         {
             var list = await _reportService.GetAll();
             var model = new ReportViewModel();

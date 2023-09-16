@@ -33,6 +33,7 @@ builder.Services.AddTransient<ITurnService, TurnService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IFieldService, FieldService>();
 builder.Services.AddTransient<IReportService, ReportService>();
+builder.Services.AddTransient<IMovementService, MovementService>();
 //aqui van los servicios
 
 //agrego autenticacion, db y roles

@@ -18,5 +18,8 @@ namespace MisCanchas.Data
         public DbSet<Client> Clients { get; set; } 
         public DbSet<Field> Fields { get; set; } 
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Movement> Movements { get; set; }
+        public DbSet<MovementType> MovementTypes { get; set; }
     }
 }
+

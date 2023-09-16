@@ -1,0 +1,85 @@
+﻿@model IQueryable<MisCanchas.Domain.Entities.Movement>
+@{
+    ViewData["Title"] = "Movimientos - Inicio";
+}
+<div class="row ">
+    <div class="col-sm-4 mb-4 ">
+        <div class="card text-black mb-3 shadow p-3 rounded">
+            <div class="card-body i_flex">
+                <h5 class="card-title">Movimientos</h5>
+                <p class="text-black-50">Dinero en caja:</p>
+                <h4>$250.965,00</h4>
+                <hr />
+                <p class="card-text text-black-50">Registrar compras, ventas, ingresos o retiros de dinero, entre otros.</p>
+                <div class="d-inline row align-content-center text-center text">
+                    <a asp-controller="Movements" asp-action="Add" class="col-sm m-1 btn i_bg-light-success text-success">Registrar nuevo movimiento</a>
+                </div>
+            </div>
+        </div>
+        <div class="card text-black mb-3 shadow p-3 rounded">
+            <div class="card-body i_flex">
+                <p class="card-text text-black-50">Consulta los reportes y estadisticas de tu negocio.</p>
+                <div class="d-inline row align-content-center text-center text">
+                    <a asp-controller="Reports" asp-action="Index" class="col-sm-5 m-1 btn i_bg-light-success text-success">Reportes de movimientos</a>
+                    <a asp-controller="Reports" asp-action="Month" class="col-sm-5 m-1 btn i_bg-light-success text-success">Estadisticas mensuales</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="col-sm-8 mb-4">
+        <div class="card mb-3 h-100 shadow p-3 rounded">
+            <div class="card-body text-success i_flex">
+                <h5 class="card-title text-black">Actividad</h5>
+                <hr />
+                <ul class="p-0">
+                    @if(Model != null){
+                        @foreach (var m in Model)
+                        {
+                            <li class="d-inline">
+                                <a class="row " href="">
+                                    <div class="col-sm-8">
+                                        <p class="text-black mb-0">@m.Name - @m.Description</p>
+                                        <p class="text-black-50 mb-0">@m.MovementType.Name</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        @if(m.MovementType.Incremental == true)
+                                        {
+                                            <p class="fw-bold text-end">$@m.Amount</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="fw-bold text-danger text-end">$@m.Amount</p>
+                                        }
+                                    </div>
+                                </a>
+                                <hr />
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="d-inline">
+                            <a class="row " href="">
+                                <div class="col-sm-8">
+                                    <p class="text-black mb-0">No se registran movimientos</p>
+                                </div>
+                            </a>
+                            <hr />
+                        </li>
+                    }
+
+                </ul>
+                <a asp-controller="Reports" asp-action="Month" class="btn i_bg-light-success text-success">Consultar estadisticas <i class="bi bi-arrow-right-circle-fill"></i></a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}
