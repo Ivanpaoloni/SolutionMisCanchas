@@ -24,9 +24,10 @@ namespace MisCanchas.Services
         }
         public async Task Add(DateTime dateTime, int id, decimal price)
         {
+            var dateTimeNormalized = dateTime.AddMinutes(-dateTime.Minute);
             var turn = new Turn()
             {
-                TurnDateTime = dateTime,
+                TurnDateTime = dateTimeNormalized,
                 ClientId = id,
                 Price = price
             };

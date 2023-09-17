@@ -1,0 +1,50 @@
+﻿@model MisCanchas.Models.AddMovementViewModel
+@{
+    ViewData["Title"] = "Nuevo Movimiento";
+
+    var linkCancelar = Url.Action("Index");
+    if (ViewBag.UrlRetorno != null)
+    {
+        linkCancelar = ViewBag.UrlRetorno;
+    }
+}
+<h1><i class="bi bi-currency-dollar"></i> Nuevo Movimiento</h1>
+<hr />
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form method="post" asp-action="Add" asp-controller="Movements">
+
+    @*<input type="hidden" asp-for="UrlRetorno" value="@ViewBag.UrlRetorno" />*@
+
+    <div class="mb-3">
+        <label asp-for="Name" class="col-form-label">Nombre</label>
+        <input type="text" asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Amount" class="col-form-label"></label>
+        <input type="number" asp-for="Amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="col-form-label">Descripcion</label>
+        <input type="text" asp-for="Description" class="form-control" />
+    
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="MovementTypeId" class="form-label"> Tipo de movimiento</label>
+        <div class="row">
+            <div class="mb-3 col-sm-4">
+                <select asp-for="MovementTypeId" asp-items="Model.MovementTypes.OrderBy(x => x.Text)" class="form-select"></select><br />
+            </div>
+            <div class="mb-3 col-sm-4">
+                <a href="" class="btn btn-success">Nueva categoria</a>
+            </div>
+        </div>
+        <span asp-validation-for="MovementTypeId" class="text-danger"></span>
+    </div>
+        
+
+    <button type="submit" class="btn btn-success">Registrar</button>
+    <a class="btn btn-secondary" href="@linkCancelar">Cancelar</a>
+</form>

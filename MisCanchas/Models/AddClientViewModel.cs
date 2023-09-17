@@ -17,5 +17,9 @@ namespace MisCanchas.Models
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [Display(Name = "Nro de Documento")]
         public int NationalIdentityDocument { get; set; }
+        public string UrlRetorno { get; set; } 
+
     }
+
+
 }

@@ -1,4 +1,26 @@
-﻿
+﻿body {
+    font-family: "Open Sans", sans-serif;
+    color: #444444;
+}
+
+a {
+    color: #1acc8d;
+    text-decoration: none;
+}
+
+    a:hover {
+        color: #34e5a6;
+        text-decoration: none;
+    }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Montserrat", sans-serif;
+}
 
 .container-bg{
     background-color:aqua;
@@ -13,4 +35,30 @@
     text-shadow: -0px 0 black, 0 0px black, 0.05em 0 black, 0 -0px black;
     text-shadow: 1px 1px 2px #032104, 0 0 1em #032104, 0 0 0.2em #032104;
     color: white;
+}
+
+.btn {
+    border-radius: 1rem;
+
+}
+
+/*clases propias*/ 
+.i_flex {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.i_bg-light-success {
+    background-color: #5cba4e23
+}
+
+/*background de tablas de mvc.grid*/ 
+.mvc-grid {
+    background-color: white
+}
+
+/*bacground de tabla de turnos*/ 
+.fc {
+    background-color: white
 }

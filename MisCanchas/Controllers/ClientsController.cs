@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
@@ -36,8 +37,15 @@ namespace MisCanchas.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public IActionResult Add( string urlRetorno = null)
         {
+            //si la url esta vacia, por defecto redireccionar a /clients.
+            if (urlRetorno is null)
+            {
+                urlRetorno = "/Clients";
+            }
+            //addClientViewModel.UrlRetorno = urlRetorno;
+            ViewBag.UrlRetorno = urlRetorno;
             return View();
         }
 
@@ -69,7 +77,16 @@ namespace MisCanchas.Controllers
             };
 
             await _clientService.Add(client);
-            return RedirectToAction("Index");
+
+
+            if (string.IsNullOrEmpty(addClientViewModel.UrlRetorno))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return LocalRedirect(addClientViewModel.UrlRetorno);
+            }
         }
 
         [HttpGet]

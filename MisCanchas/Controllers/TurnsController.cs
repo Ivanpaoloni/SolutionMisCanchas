@@ -15,13 +15,15 @@ namespace MisCanchas.Controllers
         private readonly IClientService _clientService;
         private readonly ITurnService _turnService;
         private readonly IFieldService _fieldService;
+        private readonly IReportService _reportService;
 
-        public TurnsController(MisCanchasDbContext context, IClientService clientService, ITurnService turnService, IFieldService fieldService)
+        public TurnsController(MisCanchasDbContext context, IClientService clientService, ITurnService turnService, IFieldService fieldService, IReportService reportService)
         {
             this._context = context;
             this._clientService = clientService;
             this._turnService = turnService;
             this._fieldService = fieldService;
+            this._reportService = reportService;
         }
 
         public async Task<IActionResult> Index()
@@ -104,6 +106,8 @@ namespace MisCanchas.Controllers
             //paso el nombre de la cancha por viewbag
             var fieldName = _fieldService.Get().Result.Name;
             ViewBag.FieldName = fieldName;
+            //paso la ruta actual por vb para volver al turno seleccionado
+            ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
 
             return View(viewModel);
         }
@@ -145,6 +149,28 @@ namespace MisCanchas.Controllers
                 addTurnViewModel.Clients = await GetClients();
                 ModelState.AddModelError(nameof(addTurnViewModel.TurnDateTime), $"El turno {addTurnViewModel.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
                 return View(addTurnViewModel);
+            }
+
+            //update del reporte correspondiente.
+            var report = await _reportService.Get(addTurnViewModel.TurnDateTime);
+            if(report == null)
+            {
+                report = new Report();
+                report.Date = addTurnViewModel.TurnDateTime.Date;
+                report.Amount = addTurnViewModel.Price; //inicializo el balance con el ingreso
+                report.In = addTurnViewModel.Price; //reserva = ingreso de dinero
+                report.Out = 0;
+                report.Canceled = 0;
+                report.Booking = 1; //aumenta el contador de reserva
+                await _reportService.Update(report);
+            }
+            else
+            {
+                report.Amount += addTurnViewModel.Price; //aumenta el acumulador de balance con el ingreso
+                report.In += addTurnViewModel.Price; //aumenta acumulador de ingreso
+                report.Booking++; //aumenta el contador de reserva
+                await _reportService.Update(report);
+
             }
             await _turnService.Add(addTurnViewModel.TurnDateTime, addTurnViewModel.ClientId, addTurnViewModel.Price);
             return RedirectToAction("Index");
@@ -192,8 +218,23 @@ namespace MisCanchas.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(DeleteTurnViewModel model)
         {
+            if(model.TurnDateTime < DateTime.Now)
+            {
+                ModelState.AddModelError(nameof(model.TurnDateTime), $"La reserva del {model.TurnDateTime} no puede ser eliminada porque ya no se encuentra disponible.");
+                return View(model);
+            }
+            //update del reporte correspondiente.
+            var report = await _reportService.Get(model.TurnDateTime);
+            if (report != null)
+            {
+                report.Amount -= model.Price;
+                report.In -= model.Price;
+                report.Canceled++;
+                await _reportService.Update(report);
+            }
+
             await _turnService.Delete(model.TurnId);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index");   
         }
 
         //privates

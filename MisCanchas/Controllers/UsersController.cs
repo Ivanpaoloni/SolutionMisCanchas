@@ -139,6 +139,14 @@ namespace MisCanchas.Controllers
             {
                 return NotFound();
             }
+
+            //validacion para no editar el administrador en uso.
+            if (User.Identity.Name == model.Email)
+            {
+                return RedirectToAction("List", routeValues: new { message = "No puede editar una cuenta en uso."  });
+
+            }
+
             return View(model);
         }
 

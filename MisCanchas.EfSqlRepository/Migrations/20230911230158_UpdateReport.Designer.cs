@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MisCanchas.Data;
 
@@ -11,9 +12,11 @@ using MisCanchas.Data;
 namespace MisCanchas.EfSqlRepository.Migrations
 {
     [DbContext(typeof(MisCanchasDbContext))]
-    partial class MisCanchasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230911230158_UpdateReport")]
+    partial class UpdateReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,58 +278,6 @@ namespace MisCanchas.EfSqlRepository.Migrations
                     b.ToTable("Fields");
                 });
 
-            modelBuilder.Entity("MisCanchas.Domain.Entities.Movement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MovementTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovementTypeId");
-
-                    b.ToTable("Movements");
-                });
-
-            modelBuilder.Entity("MisCanchas.Domain.Entities.MovementType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Incremental")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MovementTypes");
-                });
-
             modelBuilder.Entity("MisCanchas.Domain.Entities.Report", b =>
                 {
                     b.Property<int>("Id")
@@ -433,17 +384,6 @@ namespace MisCanchas.EfSqlRepository.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MisCanchas.Domain.Entities.Movement", b =>
-                {
-                    b.HasOne("MisCanchas.Domain.Entities.MovementType", "MovementType")
-                        .WithMany("Movements")
-                        .HasForeignKey("MovementTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MovementType");
-                });
-
             modelBuilder.Entity("MisCanchas.Domain.Entities.Turn", b =>
                 {
                     b.HasOne("MisCanchas.Domain.Entities.Client", "Client")
@@ -458,11 +398,6 @@ namespace MisCanchas.EfSqlRepository.Migrations
             modelBuilder.Entity("MisCanchas.Domain.Entities.Client", b =>
                 {
                     b.Navigation("Turns");
-                });
-
-            modelBuilder.Entity("MisCanchas.Domain.Entities.MovementType", b =>
-                {
-                    b.Navigation("Movements");
                 });
 #pragma warning restore 612, 618
         }
