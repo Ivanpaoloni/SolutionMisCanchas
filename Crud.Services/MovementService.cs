@@ -67,18 +67,9 @@ namespace MisCanchas.Services
 
 
         //Movement types
-        public async Task<IQueryable<MovementType>> GetType(int? id = null)
+        public async Task<IQueryable<MovementType>> GetType()
         {
-            if (id.HasValue)
-            {
-                IQueryable <MovementType> movementTypeList = null;
-                var movementType = await _misCanchasDbContext.MovementTypes.FindAsync(id);
-                if (movementType != null)
-                {
-                    movementTypeList.Append(movementType);
-                    return movementTypeList;
-                }
-            }
+           
             var movementTypes = await _misCanchasDbContext.MovementTypes.ToListAsync();
             var movementTypesq = movementTypes.AsQueryable();
             return movementTypesq;
@@ -92,14 +83,28 @@ namespace MisCanchas.Services
             }
             throw new NotImplementedException();
         }
-        public Task AddType(MovementType movementType)
+        public async Task AddType(MovementType movementType)
         {
-            throw new NotImplementedException();
+            await _misCanchasDbContext.MovementTypes.AddAsync(movementType);
+            await _misCanchasDbContext.SaveChangesAsync();
+        }
+        
+        public async Task UpdateType(MovementType movementType)
+        {
+            var type = await _misCanchasDbContext.MovementTypes.FirstOrDefaultAsync(x => x.Id == movementType.Id);
+            if (type != null)
+            {
+                type.Name = movementType.Name;
+                type.Incremental = movementType.Incremental;
+                await _misCanchasDbContext.SaveChangesAsync();
+            }
         }
 
-        public Task DeleteType(MovementType movementType)
+
+        public async Task DeleteType(MovementType movementType)
         {
-            throw new NotImplementedException();
+            _misCanchasDbContext.MovementTypes.Remove(movementType);
+            await _misCanchasDbContext.SaveChangesAsync();
         }
 
     }

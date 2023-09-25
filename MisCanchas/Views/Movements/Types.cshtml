@@ -1,0 +1,37 @@
+﻿@model List<MisCanchas.Domain.Entities.MovementType>
+
+
+@{
+    ViewData["Title"] = "Tipos de movimientos";
+}
+<h1>Categorias de movimientos</h1>
+<hr />
+<a href="/movements/add" class="btn btn-secondary mb-3">Volver</a>
+<a class="btn btn-success mb-3" asp-area="" asp-controller="Movements" asp-action="AddType">Nueva categoria</a>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        @Html.Grid(Model).Named("")
+    </div>
+</div>
+
+
+@(
+Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => model.Name).Titled("Nombre").Sortable(true);
+        columns.Add(model => model.Incremental).Titled("Incremental").Sortable(true);
+        columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Editar", "EditType", new { id = o.Id }, new { @class = "btn btn-secondary" }));
+    })
+    .Filterable(GridFilterCase.Lower)
+    .Using(GridFilterMode.Header)
+    .Empty("No data found")
+    .Pageable(pager =>{pager.RowsPerPage = 10;})
+)
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -7,6 +7,9 @@ using MisCanchas.Domain.Entities;
 using MisCanchas.Models;
 using MisCanchas.Services;
 using System;
+using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 
 namespace MisCanchas.Controllers
 {
@@ -31,7 +34,6 @@ namespace MisCanchas.Controllers
             if(movements.Count() >= 10)
             {
                 movements = movements.Skip(Math.Max(0, movements.Count() - 10)).Take(10);
-
             }
 
 
@@ -47,7 +49,6 @@ namespace MisCanchas.Controllers
                         m.MovementType = type;
                     }
                 }
-
                 return View(movements);
             }
             return View();
@@ -80,6 +81,76 @@ namespace MisCanchas.Controllers
         {
             var types = await _movementService.GetType();
             return types.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Types()
+        {
+            var movementTypes = new List<MovementType>();
+            var list = await _movementService.GetType();
+            if(list != null)
+            {
+                movementTypes = list.ToList();
+            }
+
+            return View(movementTypes);
+        }
+
+        [HttpGet]
+        public IActionResult AddType()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> AddType(AddMovementTypeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var type = new MovementType();
+            type.Name = model.Name;
+            type.Incremental = model.Incremental; 
+
+            await _movementService.AddType(type);
+            return RedirectToAction("Types");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditType(int id)
+        {
+            var model = new MovementType();
+            var type = await _movementService.GetTypeById(id);
+            if (type != null)
+            {
+                model.Id = type.Id;
+                model.Name = type.Name;
+                model.Incremental = type.Incremental;
+                model.Movements = type.Movements;
+                return await Task.Run(() => View("EditType", model));
+            }
+            return View("Index");
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditType(MovementType type)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(type);
+            }
+            var model = new MovementType();
+            model.Id = type.Id;
+            model.Name = type.Name;
+            model.Incremental = type.Incremental;
+            model.Movements = type.Movements;
+
+            await _movementService.UpdateType(model);
+
+            return RedirectToAction("Types");
         }
     }
 }

@@ -1,0 +1,26 @@
+﻿@model MisCanchas.Models.AddMovementTypeViewModel
+
+@{
+    ViewData["Title"] = "Agregar categoria";
+    var linkCancelar = Url.Action("Index");
+    if (ViewBag.UrlRetorno != null)
+    {
+        linkCancelar = ViewBag.UrlRetorno;
+    }
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form method="post" asp-action="AddType" asp-controller="Movements">
+    <div class="mb-3">
+        <label asp-for="Name" class="col-form-label">Nombre</label>
+        <input type="text" asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" asp-for="Incremental" class="form-check-input" />
+        <label asp-for="Incremental" class="form-check-label"></label>
+        <span asp-validation-for="Incremental" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a class="btn btn-secondary" href="/movements/types">Cancelar</a>
+</form>
