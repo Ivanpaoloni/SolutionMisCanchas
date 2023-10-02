@@ -30,71 +30,98 @@ namespace MisCanchas.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var movements = await _movementService.Get();
-            if(movements.Count() >= 10)
+            try
             {
-                movements = movements.Skip(Math.Max(0, movements.Count() - 10)).Take(10);
-            }
-
-
-            //ordeno para mostar listado alfabetico por defecto
-            if (movements != null)
-            {
-                movements = movements.OrderByDescending(c => c.DateTime).ToList().AsQueryable();
-                foreach(var m in movements)
+                var movements = await _movementService.Get();
+                if(movements.Count() >= 10)
                 {
-                    var type = await _movementService.GetTypeById(m.MovementTypeId);
-                    if (type != null)
-                    {
-                        m.MovementType = type;
-                    }
+                    movements = movements.Skip(Math.Max(0, movements.Count() - 10)).Take(10);
                 }
-                return View(movements);
+
+
+                //ordeno para mostar listado alfabetico por defecto
+                if (movements != null)
+                {
+                    movements = movements.OrderByDescending(c => c.DateTime).ToList().AsQueryable();
+                    foreach(var m in movements)
+                    {
+                        var type = await _movementService.GetTypeById(m.MovementTypeId);
+                        if (type != null)
+                        {
+                            m.MovementType = type;
+                        }
+                    }
+                    return View(movements);
+                }
+                return View();
             }
-            return View();
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var viewModel = new AddMovementViewModel();
-            viewModel.MovementTypes = await GetTypes();
-            return View(viewModel);
+            try
+            {
+                var viewModel = new AddMovementViewModel();
+                viewModel.MovementTypes = await GetTypes();
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
+                return RedirectToAction("Add");
+            }
         }
         [HttpPost]
         public async Task<IActionResult> Add(AddMovementViewModel addMovementViewModel)
         {
-            var model = new Movement();
-            model.Name = addMovementViewModel.Name;
-            model.Amount = addMovementViewModel.Amount;
-            model.Description = addMovementViewModel.Description;
-            model.MovementTypeId = addMovementViewModel.MovementTypeId;
+            try
+            {
+                var model = new Movement
+                    {
+                    Name = addMovementViewModel.Name,
+                    MovementTypeId = addMovementViewModel.MovementTypeId,
+                    Amount = addMovementViewModel.Amount,
+                    Description = addMovementViewModel.Description
+                };
 
-            await _movementService.Add(model);
+                await _movementService.Add(model);
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
+                return RedirectToAction("Add");
+            }
         }
 
-        //privates
-        //listado de items para seleccionar el tipo en el formulario
-        private async Task<IEnumerable<SelectListItem>> GetTypes() 
-        {
-            var types = await _movementService.GetType();
-            return types.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
-        }
 
 
         [HttpGet]
         public async Task<IActionResult> Types()
         {
-            var movementTypes = new List<MovementType>();
-            var list = await _movementService.GetType();
-            if(list != null)
+            try
             {
-                movementTypes = list.ToList();
-            }
+                var movementTypes = new List<MovementType>();
+                var list = await _movementService.GetType();
+                if(list != null)
+                {
+                    movementTypes = list.ToList();
+                }
 
-            return View(movementTypes);
+                return View(movementTypes);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
+                return RedirectToAction("Types");
+            }
         }
 
         [HttpGet]
@@ -106,51 +133,98 @@ namespace MisCanchas.Controllers
         [HttpPost]
         public async Task<IActionResult> AddType(AddMovementTypeViewModel model)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
-            }
-            var type = new MovementType();
-            type.Name = model.Name;
-            type.Incremental = model.Incremental; 
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                var type = new MovementType();
+                type.Name = model.Name;
+                type.Incremental = model.Incremental; 
 
-            await _movementService.AddType(type);
-            return RedirectToAction("Types");
+                await _movementService.AddType(type);
+                return RedirectToAction("Types");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
+                return RedirectToAction("AddType");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> EditType(int id)
         {
-            var model = new MovementType();
-            var type = await _movementService.GetTypeById(id);
-            if (type != null)
+            try
             {
-                model.Id = type.Id;
-                model.Name = type.Name;
-                model.Incremental = type.Incremental;
-                model.Movements = type.Movements;
-                return await Task.Run(() => View("EditType", model));
+                var model = new MovementType();
+                var type = await _movementService.GetTypeById(id);
+                if (type != null)
+                {
+                    model.Id = type.Id;
+                    model.Name = type.Name;
+                    model.Incremental = type.Incremental;
+                    model.Movements = type.Movements;
+                    return await Task.Run(() => View("EditType", model));
+                }
+                return View("Index");
             }
-            return View("Index");
-
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
+                return RedirectToAction("EditType");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> EditType(MovementType type)
         {
-            if(!ModelState.IsValid)
+            try
             {
-                return View(type);
+                if(!ModelState.IsValid)
+                {
+                    return View(type);
+                }
+                var model = new MovementType();
+                model.Id = type.Id;
+                model.Name = type.Name;
+                model.Incremental = type.Incremental;
+                model.Movements = type.Movements;
+
+                await _movementService.UpdateType(model);
+
+                return RedirectToAction("Types");
+
             }
-            var model = new MovementType();
-            model.Id = type.Id;
-            model.Name = type.Name;
-            model.Incremental = type.Incremental;
-            model.Movements = type.Movements;
-
-            await _movementService.UpdateType(model);
-
-            return RedirectToAction("Types");
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
+                return RedirectToAction("EditType");
+            }
         }
+        [HttpPost]
+        public async Task<IActionResult> Modal()
+        {
+            return await Task.Run(() => View("Add"));
+        }
+        //privates
+        //listado de items para seleccionar el tipo en el formulario
+        private async Task<IEnumerable<SelectListItem>> GetTypes() 
+        {
+            try
+            {
+                var types = await _movementService.GetType();
+                return types.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+            }
+            catch (Exception ex)
+            { 
+                ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
+                var types = new SelectListItem();
+                return (IEnumerable<SelectListItem>)types;
+            }
+        }
+    
     }
+    
 }

@@ -74,7 +74,7 @@ namespace MisCanchas.Controllers
             if (usersExist == 0)
             {
                 userService.CreateDefaultUser();
-                TurnAdmin("admin@admin");
+                TurnAdmin("admin@admin").GetAwaiter().GetResult();
             }
 
             return View();
