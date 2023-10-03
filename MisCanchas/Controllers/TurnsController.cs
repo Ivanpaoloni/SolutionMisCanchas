@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
 using MisCanchas.Models;
 using MisCanchas.Services;
+using System;
 using System.Web;
+using static MisCanchas.Services.TurnService;
 
 namespace MisCanchas.Controllers
 {
@@ -114,51 +117,53 @@ namespace MisCanchas.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Add(AddTurnViewModel addTurnViewModel)
+        public async Task<IActionResult> Add(AddTurnViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                addTurnViewModel.Clients = await GetClients();
-                return View(addTurnViewModel);
-            }
-            var turns = await _turnService.GetTurns();
+                viewModel.Clients = await GetClients();
 
-            //validacion si el turno es pasado
-            var turnSelected = addTurnViewModel.TurnDateTime;
-            if (turnSelected < DateTime.Now) 
+                return View(viewModel);
+            }
+
+            try
             {
-                addTurnViewModel.Clients = await GetClients();
-                ModelState.AddModelError(nameof(addTurnViewModel.TurnDateTime), $"El turno {addTurnViewModel.TurnDateTime} no puede ser anterior a la fecha y hora actual.");
-                return View(addTurnViewModel);
+                var turns = await _turnService.GetTurns();
+                await _turnService.Add(viewModel.TurnDateTime, viewModel.ClientId, viewModel.Price);
+                return RedirectToAction("Index");
             }
-
-            //validacion si el turno es duplicado
-            var turnDuplicate = turns.FirstOrDefault(t => t.TurnDateTime == addTurnViewModel.TurnDateTime);
-            if (turnDuplicate != null) 
+            catch (FechaHoraInvalidaException ex)
             {
-                addTurnViewModel.Clients = await GetClients();
-                ModelState.AddModelError(nameof(addTurnViewModel.TurnDateTime), $"El turno {addTurnViewModel.TurnDateTime} ya fue reservado.");
-                return View(addTurnViewModel);
+                ModelState.AddModelError(nameof(viewModel.TurnDateTime), ex.Message);
             }
-
-            //validacion de turno seleccionado entre los horarios definidos.
-            int openHour = _fieldService.Get().Result.OpenHour;
-            int closeHour = _fieldService.Get().Result.CloseHour;
-            if (addTurnViewModel.TurnDateTime.Hour < openHour && addTurnViewModel.TurnDateTime.Hour > closeHour)
+            catch (TurnoDuplicadoException ex)
             {
-                addTurnViewModel.Clients = await GetClients();
-                ModelState.AddModelError(nameof(addTurnViewModel.TurnDateTime), $"El turno {addTurnViewModel.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
-                return View(addTurnViewModel);
+                ModelState.AddModelError(nameof(viewModel.TurnDateTime), ex.Message);
+            }
+            catch (HorarioNoDisponibleException ex)
+            {
+                ModelState.AddModelError(nameof(viewModel.TurnDateTime), ex.Message);
             }
 
-            //update del reporte correspondiente.
-            var report = await _reportService.Get(addTurnViewModel.TurnDateTime);
+            viewModel.Clients = await GetClients();
+
+            //get turn price from field service
+            viewModel.Price = _fieldService.Get().Result.Price;
+            //paso el nombre de la cancha por viewbag
+            var fieldName = _fieldService.Get().Result.Name;
+            ViewBag.FieldName = fieldName;
+            //paso la ruta actual por vb para volver al turno seleccionado
+            ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
+
+            return View(viewModel);
+
+            var report = await _reportService.Get(viewModel.TurnDateTime);
             if(report == null)
             {
                 report = new Report();
-                report.Date = addTurnViewModel.TurnDateTime.Date;
-                report.Amount = addTurnViewModel.Price; //inicializo el balance con el ingreso
-                report.In = addTurnViewModel.Price; //reserva = ingreso de dinero
+                report.Date = viewModel.TurnDateTime.Date;
+                report.Amount = viewModel.Price; //inicializo el balance con el ingreso
+                report.In = viewModel.Price; //reserva = ingreso de dinero
                 report.Out = 0;
                 report.Canceled = 0;
                 report.Booking = 1; //aumenta el contador de reserva
@@ -166,14 +171,16 @@ namespace MisCanchas.Controllers
             }
             else
             {
-                report.Amount += addTurnViewModel.Price; //aumenta el acumulador de balance con el ingreso
-                report.In += addTurnViewModel.Price; //aumenta acumulador de ingreso
+                report.Amount += viewModel.Price; //aumenta el acumulador de balance con el ingreso
+                report.In += viewModel.Price; //aumenta acumulador de ingreso
                 report.Booking++; //aumenta el contador de reserva
                 await _reportService.Update(report);
 
             }
-            await _turnService.Add(addTurnViewModel.TurnDateTime, addTurnViewModel.ClientId, addTurnViewModel.Price);
+            await _turnService.Add(viewModel.TurnDateTime, viewModel.ClientId, viewModel.Price);
             return RedirectToAction("Index");
+
+            //update del reporte correspondiente.
         }
 
         [HttpGet]

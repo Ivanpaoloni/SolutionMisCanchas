@@ -15,12 +15,12 @@ namespace MisCanchas.Services
     public class TurnService : ITurnService
     {
         private readonly MisCanchasDbContext misCanchasDbContext;
-        private readonly IFieldService fieldService;
+        private readonly IFieldService _fieldService;
 
         public TurnService(MisCanchasDbContext misCanchasDbContext, IFieldService fieldService)
         {
             this.misCanchasDbContext = misCanchasDbContext;
-            this.fieldService = fieldService;
+            this._fieldService = fieldService;
         }
         public async Task Add(DateTime dateTime, int id, decimal price)
         {
@@ -31,8 +31,26 @@ namespace MisCanchas.Services
                 ClientId = id,
                 Price = price
             };
-            //var duplicateTurn = await misCanchasDbContext.Turns.Find();
-            //var duplicateTurn = await misCanchasDbContext.Turns.FirstOrDefaultAsync(t => t.TurnDateTime == addTurnViewModel.TurnDateTime);
+
+            // Validación si el turno es pasado
+            if (turn.TurnDateTime < DateTime.Now)
+            {
+                throw new FechaHoraInvalidaException("La fecha y hora debe ser posterior a la actual.");
+            }
+            // Validación si el turno es duplicado
+            var turns = await GetTurns();
+            var turnDuplicate = turns.FirstOrDefault(t => t.TurnDateTime == turn.TurnDateTime);
+            if (turnDuplicate != null)
+            {
+                throw new TurnoDuplicadoException("El turno ya fue reservado.");
+            }
+            // Validación de turno seleccionado entre los horarios definidos
+            int openHour = _fieldService.Get().Result.OpenHour;
+            int closeHour = _fieldService.Get().Result.CloseHour;
+            if (turn.TurnDateTime.Hour < openHour && turn.TurnDateTime.Hour > closeHour)
+            {
+                throw new HorarioNoDisponibleException($"El turno {turn.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
+            }
             await misCanchasDbContext.AddAsync(turn);
             await misCanchasDbContext.SaveChangesAsync();
         }
@@ -86,5 +104,23 @@ namespace MisCanchas.Services
         //        _ => null
         //    };
         //}
+        
+
+        //excepciones
+        public class FechaHoraInvalidaException : Exception
+        {
+            public FechaHoraInvalidaException(string message) : base(message) { }
+        }
+
+        public class TurnoDuplicadoException : Exception
+        {
+            public TurnoDuplicadoException(string message) : base(message) { }
+        }
+
+        public class HorarioNoDisponibleException : Exception
+        {
+            public HorarioNoDisponibleException(string message) : base(message) { }
+        }
+
     }
 }
