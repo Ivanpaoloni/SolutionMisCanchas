@@ -136,6 +136,12 @@ namespace MisCanchas.Controllers
             {
                 ModelState.AddModelError(ex.PropertyName, ex.Message);
             }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+
             //vuelvo a cargar los datos dinamicos
             viewModel.Clients = await GetClients();
             viewModel.Price = _fieldService.Get().Result.Price;
