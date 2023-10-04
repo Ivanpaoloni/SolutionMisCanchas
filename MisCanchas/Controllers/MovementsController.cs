@@ -74,12 +74,17 @@ namespace MisCanchas.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
-                return RedirectToAction("Add");
             }
+            return RedirectToAction("Add");
         }
         [HttpPost]
         public async Task<IActionResult> Add(AddMovementViewModel addMovementViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                addMovementViewModel.MovementTypes = await GetTypes();
+                return View(addMovementViewModel);
+            }
             try
             {
                 var model = new Movement
@@ -96,9 +101,12 @@ namespace MisCanchas.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
-                return RedirectToAction("Add");
+                ViewBag.ErrorMessage = ex.Message;
             }
+
+            addMovementViewModel.MovementTypes = await GetTypes();
+            return View(addMovementViewModel);
+
         }
 
 
@@ -120,8 +128,8 @@ namespace MisCanchas.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
-                return RedirectToAction("Types");
             }
+            return RedirectToAction("Types");
         }
 
         [HttpGet]
@@ -149,8 +157,8 @@ namespace MisCanchas.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
-                return RedirectToAction("AddType");
             }
+            return RedirectToAction("AddType");
         }
 
         [HttpGet]
@@ -173,8 +181,8 @@ namespace MisCanchas.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "Ha ocurrido un error: " + ex.Message;
-                return RedirectToAction("EditType");
             }
+            return RedirectToAction("EditType");
         }
 
         [HttpPost]

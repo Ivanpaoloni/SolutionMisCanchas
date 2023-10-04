@@ -35,21 +35,21 @@ namespace MisCanchas.Services
             // Validación si el turno es pasado
             if (turn.TurnDateTime < DateTime.Now)
             {
-                throw new FechaHoraInvalidaException("La fecha y hora debe ser posterior a la actual.");
+                throw new CustomTurnException("TurnDateTime" ,"La fecha y hora debe ser posterior a la actual.");
             }
             // Validación si el turno es duplicado
             var turns = await GetTurns();
             var turnDuplicate = turns.FirstOrDefault(t => t.TurnDateTime == turn.TurnDateTime);
             if (turnDuplicate != null)
             {
-                throw new TurnoDuplicadoException("El turno ya fue reservado.");
+                throw new CustomTurnException("TurnDateTime", "El turno ya fue reservado.");
             }
             // Validación de turno seleccionado entre los horarios definidos
             int openHour = _fieldService.Get().Result.OpenHour;
             int closeHour = _fieldService.Get().Result.CloseHour;
             if (turn.TurnDateTime.Hour < openHour && turn.TurnDateTime.Hour > closeHour)
             {
-                throw new HorarioNoDisponibleException($"El turno {turn.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
+                throw new CustomTurnException("TurnDateTime" ,$"El turno {turn.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
             }
             await misCanchasDbContext.AddAsync(turn);
             await misCanchasDbContext.SaveChangesAsync();
@@ -107,19 +107,13 @@ namespace MisCanchas.Services
         
 
         //excepciones
-        public class FechaHoraInvalidaException : Exception
+        public class CustomTurnException : Exception
         {
-            public FechaHoraInvalidaException(string message) : base(message) { }
-        }
-
-        public class TurnoDuplicadoException : Exception
-        {
-            public TurnoDuplicadoException(string message) : base(message) { }
-        }
-
-        public class HorarioNoDisponibleException : Exception
-        {
-            public HorarioNoDisponibleException(string message) : base(message) { }
+            public string PropertyName { get; }
+            public CustomTurnException(string propertyName, string message) : base(message) 
+            {
+                PropertyName = propertyName;
+            }
         }
 
     }

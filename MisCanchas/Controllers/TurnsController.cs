@@ -132,24 +132,13 @@ namespace MisCanchas.Controllers
                 await _turnService.Add(viewModel.TurnDateTime, viewModel.ClientId, viewModel.Price);
                 return RedirectToAction("Index");
             }
-            catch (FechaHoraInvalidaException ex)
+            catch (CustomTurnException ex)
             {
-                ModelState.AddModelError(nameof(viewModel.TurnDateTime), ex.Message);
+                ModelState.AddModelError(ex.PropertyName, ex.Message);
             }
-            catch (TurnoDuplicadoException ex)
-            {
-                ModelState.AddModelError(nameof(viewModel.TurnDateTime), ex.Message);
-            }
-            catch (HorarioNoDisponibleException ex)
-            {
-                ModelState.AddModelError(nameof(viewModel.TurnDateTime), ex.Message);
-            }
-
+            //vuelvo a cargar los datos dinamicos
             viewModel.Clients = await GetClients();
-
-            //get turn price from field service
             viewModel.Price = _fieldService.Get().Result.Price;
-            //paso el nombre de la cancha por viewbag
             var fieldName = _fieldService.Get().Result.Name;
             ViewBag.FieldName = fieldName;
             //paso la ruta actual por vb para volver al turno seleccionado
@@ -157,44 +146,20 @@ namespace MisCanchas.Controllers
 
             return View(viewModel);
 
-            var report = await _reportService.Get(viewModel.TurnDateTime);
-            if(report == null)
-            {
-                report = new Report();
-                report.Date = viewModel.TurnDateTime.Date;
-                report.Amount = viewModel.Price; //inicializo el balance con el ingreso
-                report.In = viewModel.Price; //reserva = ingreso de dinero
-                report.Out = 0;
-                report.Canceled = 0;
-                report.Booking = 1; //aumenta el contador de reserva
-                await _reportService.Update(report);
-            }
-            else
-            {
-                report.Amount += viewModel.Price; //aumenta el acumulador de balance con el ingreso
-                report.In += viewModel.Price; //aumenta acumulador de ingreso
-                report.Booking++; //aumenta el contador de reserva
-                await _reportService.Update(report);
-
-            }
-            await _turnService.Add(viewModel.TurnDateTime, viewModel.ClientId, viewModel.Price);
-            return RedirectToAction("Index");
-
-            //update del reporte correspondiente.
         }
 
-        [HttpGet]
-        public async Task<IActionResult> VerificarExisteTurno(Turn turn)
-        {
-            var turns = await _turnService.GetTurns();
-            var turnDuplicate = turns.FirstOrDefault(t => t.TurnDateTime == turn.TurnDateTime);
+        //[HttpGet]
+        //public async Task<IActionResult> VerificarExisteTurno(Turn turn)
+        //{
+        //    var turns = await _turnService.GetTurns();
+        //    var turnDuplicate = turns.FirstOrDefault(t => t.TurnDateTime == turn.TurnDateTime);
 
-            if (turnDuplicate != null)
-            {
-                return Json($"El Turno {turn.TurnDateTime} ya existe.");
-            }
-            return Json(true);
-        }
+        //    if (turnDuplicate != null)
+        //    {
+        //        return Json($"El Turno {turn.TurnDateTime} ya existe.");
+        //    }
+        //    return Json(true);
+        //}
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id)

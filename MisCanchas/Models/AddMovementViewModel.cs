@@ -8,6 +8,8 @@ namespace MisCanchas.Models
     {
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         public int Id { get; set; }
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [Display(Name = "Nombre")]
         public string Name { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [Display(Name = "Fecha y Hora")]
@@ -16,6 +18,8 @@ namespace MisCanchas.Models
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [Display(Name = "Monto a registrar")]
         public decimal Amount { get; set; }
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [Display(Name = "Descripcion")]
         public string Description { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [Display(Name = "Tipo de movimiento")]
