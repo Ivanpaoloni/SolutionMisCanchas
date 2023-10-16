@@ -23,6 +23,7 @@ namespace MisCanchas.Domain.Entities
         public int MovementTypeId { get; set; }
         [Required]
         public virtual MovementType MovementType { get; set; }
+        public decimal CurrentBalance { get; set; }
 
     }
 }

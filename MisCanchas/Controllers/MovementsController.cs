@@ -8,8 +8,10 @@ using MisCanchas.Models;
 using MisCanchas.Services;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using static MisCanchas.Services.MovementService;
 
 namespace MisCanchas.Controllers
 {
@@ -18,12 +20,15 @@ namespace MisCanchas.Controllers
         private MisCanchasDbContext _context;
         private readonly IReportService _reportService;
         private readonly IMovementService _movementService;
+        private readonly ICashService _cashService;
 
-        public MovementsController(MisCanchasDbContext context, IReportService reportService, IMovementService movementService)
+        public MovementsController(MisCanchasDbContext context, IReportService reportService, IMovementService movementService,
+            ICashService cashService)
         {
             this._context = context;
             this._reportService = reportService;
             this._movementService = movementService;
+            this._cashService = cashService;
         }
 
 
@@ -33,6 +38,8 @@ namespace MisCanchas.Controllers
             try
             {
                 var movements = await _movementService.Get();
+                var cash = await _cashService.Get();
+                ViewBag.Cash = cash.Amount;
                 if(movements.Count() >= 10)
                 {
                     movements = movements.Skip(Math.Max(0, movements.Count() - 10)).Take(10);
@@ -87,6 +94,7 @@ namespace MisCanchas.Controllers
             }
             try
             {
+               
                 var model = new Movement
                     {
                     Name = addMovementViewModel.Name,
@@ -98,6 +106,10 @@ namespace MisCanchas.Controllers
                 await _movementService.Add(model);
 
                 return RedirectToAction("Index");
+            }
+            catch (CustomMovementException ex)
+            {
+                ModelState.AddModelError(ex.PropertyName, ex.Message);
             }
             catch (Exception ex)
             {

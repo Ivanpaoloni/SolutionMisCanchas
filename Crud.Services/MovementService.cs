@@ -16,10 +16,12 @@ namespace MisCanchas.Services
     {
 
         private readonly MisCanchasDbContext _misCanchasDbContext;
+        private readonly ICashService cashService;
 
-        public MovementService(MisCanchasDbContext misCanchasDbContext)
+        public MovementService(MisCanchasDbContext misCanchasDbContext, ICashService cashService)
         {
             this._misCanchasDbContext = misCanchasDbContext;
+            this.cashService = cashService;
         }
         //Movements
         public async Task<IQueryable<Movement>> Get(int? id = null, MovementType movementType = null, DateTime? date = null)
@@ -38,11 +40,13 @@ namespace MisCanchas.Services
             if (movementType != null)
             {
                 movements = _misCanchasDbContext.Movements.Where(m => m.MovementType == movementType);
+                return movements;
             }
 
             if (date.HasValue)
             {
                 movements = _misCanchasDbContext.Movements.Where(m => m.DateTime.Date == date.Value.Date);
+                return movements;
             }
 
             //movements = (IQueryable<Movement>)await _misCanchasDbContext.Movements.ToListAsync();
@@ -54,8 +58,26 @@ namespace MisCanchas.Services
         }
         public async Task Add(Movement movement)
         {
+            var cash = await cashService.Get();
+            movement.MovementType = await GetTypeById(movement.MovementTypeId);
+
+            //validacion si posee suficientes fondos
+            if (!movement.MovementType.Incremental && movement.Amount > cash.Amount)
+            {
+                throw new CustomMovementException("Amount", "No hay suficiente saldo para retirar.");
+            }
+
             movement.DateTime = DateTime.Now;
-            movement.MovementTypeId = movement.MovementTypeId;
+            if (movement.MovementType.Incremental == true)
+            {
+                movement.CurrentBalance = cash.Amount + movement.Amount;
+                await cashService.Update(movement.Amount);
+            }
+            else
+            {
+                movement.CurrentBalance = cash.Amount - movement.Amount;
+                await cashService.Update(-movement.Amount);
+            }
             await _misCanchasDbContext.Movements.AddAsync(movement);
             await _misCanchasDbContext.SaveChangesAsync();
         }
@@ -105,6 +127,16 @@ namespace MisCanchas.Services
         {
             _misCanchasDbContext.MovementTypes.Remove(movementType);
             await _misCanchasDbContext.SaveChangesAsync();
+        }
+
+        //excepciones
+        public class CustomMovementException : Exception
+        {
+            public string PropertyName { get; }
+            public CustomMovementException(string propertyName, string message) : base(message)
+            {
+                PropertyName = propertyName;
+            }
         }
 
     }

@@ -20,6 +20,8 @@ namespace MisCanchas.Data
         public DbSet<Report> Reports { get; set; }
         public DbSet<Movement> Movements { get; set; }
         public DbSet<MovementType> MovementTypes { get; set; }
+        public DbSet<Cash> Cash { get; set; }
+
     }
 }
 

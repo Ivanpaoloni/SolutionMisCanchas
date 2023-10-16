@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MisCanchas.Data;
 
@@ -11,9 +12,11 @@ using MisCanchas.Data;
 namespace MisCanchas.EfSqlRepository.Migrations
 {
     [DbContext(typeof(MisCanchasDbContext))]
-    partial class MisCanchasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231016142858_CashStatus")]
+    partial class CashStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,9 +303,6 @@ namespace MisCanchas.EfSqlRepository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("CurrentBalance")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("DateTime")
