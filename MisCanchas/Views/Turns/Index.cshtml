@@ -79,7 +79,7 @@
                     console.log(info.dateStr);
                 },
                 eventClick: async function (info) {
-                    await deleteTurnById(info.event.id);
+                    await viewTurnById(info.event.id);
                     console.log(info.event.id);
                 },
                 slotMinTime: '08:00',
@@ -122,8 +122,8 @@
             window.location.href = `/Turns/Add?dateTime=${dateTime1}`;
         }
 
-        async function deleteTurnById(id){
-            window.location.href = `/Turns/Delete?id=${id}`;
+        async function viewTurnById(id){
+            window.location.href = `/Turns/View?id=${id}`;
         }
 
         

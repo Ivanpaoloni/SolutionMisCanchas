@@ -24,9 +24,18 @@
         <input type="text" class="form-control" asp-for="ClientId" readonly />
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Precio</label>
-        <input type="text" class="form-control" asp-for="Price" readonly />
+    <div class="row mb-3">
+        <div class="col-sm-2 form-check">
+            <label class="form-check-label">Pagado</label>
+            <input type="checkbox" class="form-check-input" asp-for="Paid" readonly disabled/>
+        </div>
+        <div class="col-sm-1">
+            <label asp-for="Price" class="form-label"></label>
+        </div>
+        <div class="col-sm">
+            <input asp-for="Price" class="form-control" readonly />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
     </div>
 
     <button type="submit" class="btn btn-danger">Eliminar</button>

@@ -129,7 +129,7 @@ namespace MisCanchas.Controllers
             try
             {
                 var turns = await _turnService.GetTurns();
-                await _turnService.Add(viewModel.TurnDateTime, viewModel.ClientId, viewModel.Price);
+                await _turnService.Add(viewModel.TurnDateTime, viewModel.ClientId, viewModel.Price, viewModel.Paid);
                 return RedirectToAction("Index");
             }
             catch (CustomTurnException ex)
@@ -166,7 +166,83 @@ namespace MisCanchas.Controllers
         //    }
         //    return Json(true);
         //}
+        [HttpGet]
+        public async Task<IActionResult> View(int id)
+        {
+            //paso el nombre de la cancha por viewbag
+            var fieldName = _fieldService.Get().Result.Name;
 
+            ViewBag.FieldName = fieldName;
+
+            var turnSelected = _turnService.Get(id);
+            if (turnSelected != null)
+            {
+                var viewModel = new TurnViewModel
+                {
+                    TurnId = turnSelected.Result.TurnId,
+                    TurnDateTime = turnSelected.Result.TurnDateTime,
+                    ClientId = turnSelected.Result.ClientId,
+                    Price = turnSelected.Result.Price,
+                    Paid = turnSelected.Result.Paid
+                };
+                viewModel.Clients = await GetClients();
+                return await Task.Run(() => View("View", viewModel));
+            }
+            if (turnSelected is null)
+            {
+                return RedirectToAction("NoEncontrado", "Home");
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> View(TurnViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Clients = await GetClients();
+
+                return await View(viewModel);
+            }
+
+            try
+            {
+                var turns = await _turnService.GetTurns();
+                Turn turn = new Turn
+                {
+                    TurnId = viewModel.TurnId,
+                    TurnDateTime = viewModel.TurnDateTime, 
+                    //Client = await _clientService.GetSingleClient(viewModel.ClientId),
+                    ClientId = viewModel.ClientId,
+                    Price = viewModel.Price,
+                    Paid= viewModel.Paid
+                };
+
+                await _turnService.Update(turn);
+
+                return RedirectToAction("Index");
+            }
+            catch (CustomTurnException ex)
+            {
+                ModelState.AddModelError(ex.PropertyName, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+
+            //vuelvo a cargar los datos dinamicos
+            viewModel.Clients = await GetClients();
+            viewModel.Price = _fieldService.Get().Result.Price;
+            var fieldName = _fieldService.Get().Result.Name;
+            ViewBag.FieldName = fieldName;
+            //paso la ruta actual por vb para volver al turno seleccionado
+            ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
+
+            return await Task.Run(() => View("View", viewModel));
+
+        }
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -182,7 +258,8 @@ namespace MisCanchas.Controllers
                     TurnId = turnSelected.Result.TurnId,
                     TurnDateTime = turnSelected.Result.TurnDateTime,
                     ClientId = turnSelected.Result.ClientId,   
-                    Price = turnSelected.Result.Price
+                    Price = turnSelected.Result.Price,
+                    Paid = turnSelected.Result.Paid
                 };
                 return await Task.Run(() => View("Delete", viewModel));
             }

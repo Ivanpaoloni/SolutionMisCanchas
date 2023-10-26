@@ -22,14 +22,15 @@ namespace MisCanchas.Services
             this.misCanchasDbContext = misCanchasDbContext;
             this._fieldService = fieldService;
         }
-        public async Task Add(DateTime dateTime, int id, decimal price)
+        public async Task Add(DateTime dateTime, int id, decimal price, bool paid)
         {
             var dateTimeNormalized = dateTime.AddMinutes(-dateTime.Minute);
             var turn = new Turn()
             {
                 TurnDateTime = dateTimeNormalized,
                 ClientId = id,
-                Price = price
+                Price = price,
+                Paid = paid
             };
 
             // Validación si el turno es pasado
@@ -52,6 +53,43 @@ namespace MisCanchas.Services
                 throw new CustomTurnException("TurnDateTime" ,$"El turno {turn.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
             }
             await misCanchasDbContext.AddAsync(turn);
+            await misCanchasDbContext.SaveChangesAsync();
+        }
+
+        public async Task Update(Turn turn)
+        {
+            // Validación si el turno es pasado
+            if (turn.TurnDateTime < DateTime.Now)
+            {
+                throw new CustomTurnException("TurnDateTime", "La fecha y hora debe ser posterior a la actual.");
+            }
+            // Validación si el turno es duplicado
+            var turns = await GetTurns();
+            var turnDuplicate = turns.FirstOrDefault(t => t.TurnDateTime == turn.TurnDateTime);
+            if (turnDuplicate != null && turnDuplicate.TurnId != turn.TurnId) // valida si ya existe PERO si es el mismo turno lo sobreescribe
+            {
+                throw new CustomTurnException("TurnDateTime", "El turno ya fue reservado.");
+            }
+            // Validación de turno seleccionado entre los horarios definidos
+            int openHour = _fieldService.Get().Result.OpenHour;
+            int closeHour = _fieldService.Get().Result.CloseHour;
+            if (turn.TurnDateTime.Hour < openHour && turn.TurnDateTime.Hour > closeHour)
+            {
+                throw new CustomTurnException("TurnDateTime", $"El turno {turn.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
+            }
+
+            var turnq = await misCanchasDbContext.Turns.FindAsync(turn.TurnId);
+            if (turnq != null)
+            {
+                turnq.TurnId = turn.TurnId;
+                turnq.TurnDateTime = turn.TurnDateTime;
+                turnq.ClientId = turn.ClientId;
+                turnq.Paid = turn.Paid;
+                turnq.Price = turn.Price;
+            }
+
+
+            misCanchasDbContext.Update(turnq);
             await misCanchasDbContext.SaveChangesAsync();
         }
 

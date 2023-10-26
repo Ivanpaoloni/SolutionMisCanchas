@@ -1,0 +1,54 @@
+﻿@model TurnViewModel
+@{
+    ViewData["Title"] = "Detalles del turno";
+}
+
+<h1>Detalle del turno - @ViewBag.FieldName</h1>
+
+<form asp-action="View" asp-controller="Turns">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="TurnDateTime" class="form-label"></label>
+        <input asp-for="TurnDateTime" type="datetime-local" step="3600" class="form-control" />
+        <span asp-validation-for="TurnDateTime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Id de turno</label>
+        <input type="text" class="form-control" asp-for="TurnId" readonly />
+    </div>
+    <input type="hidden" asp-for="TurnId" />
+
+    <div class="row mb-3">
+        <div class="col-sm-1">
+            <label asp-for="ClientId" class="mt-2"></label>
+        </div>
+        <div class="col-sm">
+            <select asp-for="ClientId" asp-items="Model.Clients.OrderBy(x=>x.Text)" class="form-select"></select><br />
+            <span asp-validation-for="ClientId" class="text-danger"></span>
+        </div>
+        <div class="col-sm-1">
+            <a class="btn btn-sm btn-success" asp-controller="Clients" asp-route-urlRetorno="@ViewBag.UrlRetorno" asp-action="Add">Nuevo Cliente</a>
+
+        </div>
+    </div>
+    <div class="row mb-3 ">
+        <div class="col-sm-1 mt-2">
+            <label asp-for="Price" class="form-label"></label>
+        </div>
+        <div class="col-sm">
+            <input asp-for="Price" class="form-control" readonly />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="form-check">
+            <label class="form-check-label">Pagado</label>
+            <input type="checkbox" class="form-check-input" asp-for="Paid" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.TurnId">Eliminar</a>
+    <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>

@@ -18,5 +18,6 @@ namespace MisCanchas.Domain.Entities
         [ForeignKey("ClientId")]
         public virtual Client Client { get; set; }
         public decimal Price { get; set; }
+        public bool Paid { get; set; }
     }
 }
