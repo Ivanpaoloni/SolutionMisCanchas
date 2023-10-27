@@ -28,13 +28,13 @@ namespace MisCanchas.Controllers
             this._reportService = reportService;
         }
 
-		public async Task<IActionResult> Index()
-		{
+		//public async Task<IActionResult> Index()
+		//{
 
-			return View();
-		}
+		//	return View();
+		//}
 		[HttpGet]
-        public async Task<IActionResult> Month()
+        public async Task<IActionResult> Index()
         {
             var list = await _reportService.GetAll();
             var model = new ReportViewModel();

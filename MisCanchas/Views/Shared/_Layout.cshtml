@@ -67,26 +67,18 @@
                                 
                             </ul>
                         </li>
-                        
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-graph-up"></i> Reportes
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="index"><i class="bi bi-graph-up"></i> Inicio</a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Month"><i class="bi bi-graph-up"></i> Reportes Mensuales</a>
-                            </ul>
+
+                        <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="index"><i class="bi bi-graph-up"></i> Reportes</a>
                         </li>
+                        
 
                         @if (User.IsInRole(Constants.RollAdmin))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="SistemAdmin" asp-action="index"><i class="bi bi-gear-fill"></i> Administración</a>
                             </li>
+                            
                         }
 
                     </ul>

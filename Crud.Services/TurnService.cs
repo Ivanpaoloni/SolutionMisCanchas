@@ -58,6 +58,17 @@ namespace MisCanchas.Services
 
         public async Task Update(Turn turn)
         {
+            var turnq = await misCanchasDbContext.Turns.FindAsync(turn.TurnId);
+            //valdiación de turno vencido (fecha pasada)
+            if (turnq.TurnDateTime < DateTime.Now)
+            {
+                if (turnq.TurnDateTime == turn.TurnDateTime)
+                {
+				    throw new CustomTurnException("TurnDateTime", "El turno ya caducó.");
+                }
+                throw new CustomTurnException("TurnDateTime", "El turno ya caducó.");
+            }
+
             // Validación si el turno es pasado
             if (turn.TurnDateTime < DateTime.Now)
             {
@@ -78,8 +89,7 @@ namespace MisCanchas.Services
                 throw new CustomTurnException("TurnDateTime", $"El turno {turn.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
             }
 
-            var turnq = await misCanchasDbContext.Turns.FindAsync(turn.TurnId);
-            if (turnq != null)
+			if (turnq != null)
             {
                 turnq.TurnId = turn.TurnId;
                 turnq.TurnDateTime = turn.TurnDateTime;
@@ -87,7 +97,6 @@ namespace MisCanchas.Services
                 turnq.Paid = turn.Paid;
                 turnq.Price = turn.Price;
             }
-
 
             misCanchasDbContext.Update(turnq);
             await misCanchasDbContext.SaveChangesAsync();
