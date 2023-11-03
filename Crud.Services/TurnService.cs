@@ -16,12 +16,14 @@ namespace MisCanchas.Services
     {
         private readonly MisCanchasDbContext misCanchasDbContext;
         private readonly IFieldService _fieldService;
+		private readonly IMovementService _movementService;
 
-        public TurnService(MisCanchasDbContext misCanchasDbContext, IFieldService fieldService)
+		public TurnService(MisCanchasDbContext misCanchasDbContext, IFieldService fieldService, IMovementService movementService)
         {
             this.misCanchasDbContext = misCanchasDbContext;
             this._fieldService = fieldService;
-        }
+			this._movementService = movementService;
+		}
         public async Task Add(DateTime dateTime, int id, decimal price, bool paid)
         {
             var dateTimeNormalized = dateTime.AddMinutes(-dateTime.Minute);
@@ -53,24 +55,32 @@ namespace MisCanchas.Services
                 throw new CustomTurnException("TurnDateTime" ,$"El turno {turn.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
             }
             await misCanchasDbContext.AddAsync(turn);
+
+            // registra movimiento
+            await GenerateMovement(turn);
+
             await misCanchasDbContext.SaveChangesAsync();
         }
 
         public async Task Update(Turn turn)
         {
             var turnq = await misCanchasDbContext.Turns.FindAsync(turn.TurnId);
+
             //valdiación de turno vencido (fecha pasada)
-            if (turnq.TurnDateTime < DateTime.Now)
+            if (turnq.TurnDateTime < DateTime.Now && turnq.Paid)
             {
-                if (turnq.TurnDateTime == turn.TurnDateTime)
+                throw new CustomTurnException("TurnDateTime", "El turno caducó, y ya se registró su pago.");
+            }
+            if(turnq.TurnDateTime < DateTime.Now)
+            {
+                if (turnq.TurnDateTime != turn.TurnDateTime)
                 {
-				    throw new CustomTurnException("TurnDateTime", "El turno ya caducó.");
+				    throw new CustomTurnException("TurnDateTime", "El turno caducó y no es posible cambiar la fecha, solo es posible registrar su pago.");
                 }
-                throw new CustomTurnException("TurnDateTime", "El turno ya caducó.");
             }
 
             // Validación si el turno es pasado
-            if (turn.TurnDateTime < DateTime.Now)
+            if (turn.TurnDateTime < DateTime.Now && turnq.TurnDateTime != turn.TurnDateTime)
             {
                 throw new CustomTurnException("TurnDateTime", "La fecha y hora debe ser posterior a la actual.");
             }
@@ -89,6 +99,12 @@ namespace MisCanchas.Services
                 throw new CustomTurnException("TurnDateTime", $"El turno {turn.TurnDateTime} debe ser seleccionado en un horario disponible entre las {openHour} y las {closeHour}.");
             }
 
+            //Validación de turno si ya fue pagado y se quita el pago.
+            if (turnq.Paid == true && turn.Paid == false)
+            {
+                throw new CustomTurnException("Paid", "El turno ya fue pagado.");
+            }
+
 			if (turnq != null)
             {
                 turnq.TurnId = turn.TurnId;
@@ -96,9 +112,13 @@ namespace MisCanchas.Services
                 turnq.ClientId = turn.ClientId;
                 turnq.Paid = turn.Paid;
                 turnq.Price = turn.Price;
+
+                //registrar movimiento
+                await GenerateMovement(turnq);
+                misCanchasDbContext.Update(turnq);
             }
 
-            misCanchasDbContext.Update(turnq);
+            
             await misCanchasDbContext.SaveChangesAsync();
         }
 
@@ -107,6 +127,14 @@ namespace MisCanchas.Services
             var turn = await misCanchasDbContext.Turns.FindAsync(id);
             if (turn != null)
             {
+                if (turn.TurnDateTime < DateTime.Now)
+                {
+                    throw new CustomTurnException("TurnDateTime", "El turno caducó, por lo tanto no puede ser eliminado.");
+                }
+                if (turn.Paid)
+                {
+                    await DiscountMovement(turn);
+                }
                 misCanchasDbContext.Turns.Remove(turn);
                 await misCanchasDbContext.SaveChangesAsync();
             }
@@ -151,7 +179,66 @@ namespace MisCanchas.Services
         //        _ => null
         //    };
         //}
-        
+
+        //private registro de movimiento
+        private async Task GenerateMovement(Turn turn)
+        {
+            if (turn.Paid)
+            {
+                var movementType = _movementService.GetType().Result
+                    .Where(x => x.Name.Contains("turno"))
+                    .Where(x => x.Incremental == true)
+                    .FirstOrDefault();
+                if (movementType == null)
+                {
+                    await _movementService.AddType(new MovementType() { Name = "Pago de turno", Incremental = true });
+                    movementType = _movementService.GetType().Result.Where(x => x.Name.Contains("turno")).FirstOrDefault();
+                }
+
+
+                var movement = new Movement
+                {
+                    Amount = turn.Price,
+                    DateTime = DateTime.Now,
+                    Name = "Pago de reserva",
+                    Description = $"reserva {turn.TurnDateTime.ToShortDateString()}, {turn.TurnDateTime.ToShortTimeString()}",
+                    MovementTypeId = movementType.Id
+
+                };
+                await _movementService.Add(movement);
+            }
+        }
+        private async Task DiscountMovement(Turn turn)
+        {
+            if (turn.Paid)
+            {
+                var movementType = _movementService.GetType().Result
+                    .Where(x => x.Name.Contains("turno"))
+                    .Where(x => x.Incremental == false)
+                    .FirstOrDefault();
+                if (movementType == null)
+                {
+                    await _movementService.AddType(new MovementType() { Name = "Cancelacion de turno", Incremental = false });
+                    movementType = _movementService.GetType().Result
+                        .Where(x => x.Name.Contains("turno"))
+                        .Where(x => x.Incremental == false)
+                        .FirstOrDefault();
+                }
+
+
+                var movement = new Movement
+                {
+                    Amount = turn.Price,
+                    DateTime = DateTime.Now,
+                    Name = "Cancelación de reserva",
+                    Description = $"reserva {turn.TurnDateTime.ToShortDateString()}, {turn.TurnDateTime.ToShortTimeString()}",
+                    MovementTypeId = movementType.Id
+
+                };
+                await _movementService.Add(movement);
+            }
+        }
+
 
         //excepciones
         public class CustomTurnException : Exception

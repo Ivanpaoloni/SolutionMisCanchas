@@ -44,7 +44,15 @@
     <div class="mb-3">
         <div class="form-check">
             <label class="form-check-label">Pagado</label>
-            <input type="checkbox" class="form-check-input" asp-for="Paid" />
+            @if(Model.Paid == true)
+            {
+                <input type="checkbox" class="form-check-input" asp-for="Paid" disabled/>
+            }
+            else
+            {
+                <input type="checkbox" class="form-check-input" asp-for="Paid"/>              
+            }
+            <span asp-validation-for="Paid" class="text-danger"></span>
         </div>
     </div>
 

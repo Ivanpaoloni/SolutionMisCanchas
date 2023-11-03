@@ -109,6 +109,7 @@ namespace MisCanchas.Controllers
             //paso el nombre de la cancha por viewbag
             var fieldName = _fieldService.Get().Result.Name;
             ViewBag.FieldName = fieldName;
+
             //paso la ruta actual por vb para volver al turno seleccionado
             ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
 
@@ -154,18 +155,6 @@ namespace MisCanchas.Controllers
 
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> VerificarExisteTurno(Turn turn)
-        //{
-        //    var turns = await _turnService.GetTurns();
-        //    var turnDuplicate = turns.FirstOrDefault(t => t.TurnDateTime == turn.TurnDateTime);
-
-        //    if (turnDuplicate != null)
-        //    {
-        //        return Json($"El Turno {turn.TurnDateTime} ya existe.");
-        //    }
-        //    return Json(true);
-        //}
         [HttpGet]
         public async Task<IActionResult> View(int id)
         {
@@ -273,23 +262,37 @@ namespace MisCanchas.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(DeleteTurnViewModel model)
         {
-            if(model.TurnDateTime < DateTime.Now)
-            {
-                ModelState.AddModelError(nameof(model.TurnDateTime), $"La reserva del {model.TurnDateTime} no puede ser eliminada porque ya no se encuentra disponible.");
-                return View(model);
+            try{
+                //if (model.TurnDateTime < DateTime.Now)
+                //{
+                //    ModelState.AddModelError(nameof(model.TurnDateTime), $"La reserva del {model.TurnDateTime} no puede ser eliminada porque ya no se encuentra disponible.");
+                //    return View(model);
+                //}
+                //update del reporte correspondiente.
+                var report = await _reportService.Get(model.TurnDateTime);
+                if (report != null)
+                {
+                    report.Amount -= model.Price;
+                    report.In -= model.Price;
+                    report.Canceled++;
+                    await _reportService.Update(report);
+                }
+                await _turnService.Delete(model.TurnId);
+                return RedirectToAction("Index");
             }
-            //update del reporte correspondiente.
-            var report = await _reportService.Get(model.TurnDateTime);
-            if (report != null)
+            catch (CustomTurnException ex)
             {
-                report.Amount -= model.Price;
-                report.In -= model.Price;
-                report.Canceled++;
-                await _reportService.Update(report);
+                ModelState.AddModelError(ex.PropertyName, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
             }
 
-            await _turnService.Delete(model.TurnId);
-            return RedirectToAction("Index");   
+            return View(model);
+
+
         }
 
         //privates
