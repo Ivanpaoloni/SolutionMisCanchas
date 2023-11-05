@@ -56,8 +56,13 @@ namespace MisCanchas.Controllers
                 id = t.TurnId,
                 title = t.Client.ClientName,
                 start = t.TurnDateTime.ToString("yyyy-MM-dd HH:mm"),
-                end = t.TurnDateTime.ToString("yyyy-MM-dd HH:mm")
+                end = t.TurnDateTime.ToString("yyyy-MM-dd HH:mm"),
+                paid = t.Paid,
+                backgroundColor = t.Paid ? "#198754" : "", // Cambia el color de fondo en función de "Paid"
+                borderColor = t.Paid ? "#198754" : "", // Cambia el color de fondo en función de "Paid"
+
             });
+
             return Json(turnsJson);
         }
 
@@ -88,7 +93,7 @@ namespace MisCanchas.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add(DateTime dateTime)
+        public async Task<IActionResult> Add(DateTime dateTime, int? clientId = null)
         {
             if(dateTime.Year == 0001)
             {
@@ -102,6 +107,14 @@ namespace MisCanchas.Controllers
             var viewModel = new AddTurnViewModel();
             viewModel.TurnDateTime = dateTime;
             viewModel.Clients = await GetClients();
+
+            // Logica para recuperar el cliente pasado por URL y cargarlo por defecto en el selector al crear nuevo turno
+            viewModel.Clients = viewModel.Clients.Select(c => new SelectListItem
+            {
+                Text = c.Text,
+                Value = c.Value,
+                Selected = (clientId.HasValue && c.Value == clientId.ToString())
+            }).ToList();
 
             //get turn price from field service
             viewModel.Price = _fieldService.Get().Result.Price;

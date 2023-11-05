@@ -72,8 +72,10 @@
                 initialView: 'timeGridWeek',
                 locale: 'es',
                 events: '/turns/GetTurnsCalendar',
-                eventColor: '#198754', // Color predeterminado para todos los eventos en el calendario
-                eventBackgroundColor: '#198754', // Color de fondo predeterminado para todos los eventos en el calendario
+
+                //eventColor: '#198754', // Color predeterminado para todos los eventos en el calendario
+                //eventBackgroundColor: '#198754', // Color de fondo predeterminado para todos los eventos en el calendario
+
                 dateClick: async function(info){
                     await getSingleTurnByDate(info.dateStr);
                     console.log(info.dateStr);
