@@ -68,7 +68,8 @@
                 slotLabelInterval: '01:00',
                 contentHeight: 'auto',
                 height: 'parent',
-                themeSystem: 'bootstrap5',
+                allDaySlot : false,
+                themeSystem: 'bootstrap5-',
                 initialView: 'timeGridWeek',
                 locale: 'es',
                 events: '/turns/GetTurnsCalendar',
@@ -86,6 +87,18 @@
                 },
                 slotMinTime: '08:00',
                 slotMaxTime: '27:00',
+                dayHeaderFormat: { 
+                    weekday: 'long',
+                    month: 'numeric', 
+                    day: 'numeric', 
+                    omitCommas: true
+                },
+                slotLabelFormat: {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    omitZeroMinute: true,
+                    meridiem: 'short'
+                },
                 headerToolbar: {
                     left: 'prev,next,today',
                     center: 'title',
@@ -93,6 +106,17 @@
                     close: 'fa-times',
                     prev: 'fa-chevron-left',
                     next: 'fa-chevron-right'
+                },
+                titleFormat: { // will produce something like "Tuesday, September 18, 2018"
+                    month: 'short',
+                    year: 'numeric',
+                    day: 'numeric',
+                    weekday: 'short'
+                },
+                buttonText: {
+                    today: 'Hoy',
+                    week: 'Semana',
+                    day: 'Día'
                 }
             })
             calendar.render();
