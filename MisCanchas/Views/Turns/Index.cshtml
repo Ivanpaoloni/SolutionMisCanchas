@@ -68,7 +68,7 @@
                 slotLabelInterval: '01:00',
                 contentHeight: 'auto',
                 height: 'parent',
-                allDaySlot : false,
+                allDaySlot : false, //remuevo el slot de allday superior
                 themeSystem: 'bootstrap5-',
                 initialView: 'timeGridWeek',
                 locale: 'es',
@@ -107,13 +107,13 @@
                     prev: 'fa-chevron-left',
                     next: 'fa-chevron-right'
                 },
-                titleFormat: { // will produce something like "Tuesday, September 18, 2018"
+                titleFormat: { // cambio formato de titulo
                     month: 'short',
                     year: 'numeric',
                     day: 'numeric',
                     weekday: 'short'
                 },
-                buttonText: {
+                buttonText: { // cambio textos de los botones del nav
                     today: 'Hoy',
                     week: 'Semana',
                     day: 'Día'
