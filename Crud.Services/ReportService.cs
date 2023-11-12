@@ -29,15 +29,12 @@ namespace MisCanchas.Services
 
             return report;
         }
-
         public async Task<IQueryable<Report>> GetAll()
         {
             var list = await misCanchasDbContext.Reports.ToListAsync();
             var listq = list.AsQueryable();
             return listq;
         }
-
-
         public async Task Update(Report report)
         {
             //var oldReport = await Get(report.Date);

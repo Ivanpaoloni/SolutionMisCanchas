@@ -16,7 +16,7 @@ namespace MisCanchas.Contracts.Services
         Task Update(Movement movement);
 
         //tipos
-        Task<IQueryable<MovementType>> GetType();
+        Task<IQueryable<MovementType>> GetTypes();
         Task AddType(MovementType movementType);
         Task DeleteType(MovementType movementType);
         Task<MovementType> GetTypeById(int id);

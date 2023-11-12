@@ -129,7 +129,7 @@ namespace MisCanchas.Controllers
             try
             {
                 var movementTypes = new List<MovementType>();
-                var list = await _movementService.GetType();
+                var list = await _movementService.GetTypes();
                 if(list != null)
                 {
                     movementTypes = list.ToList();
@@ -234,7 +234,7 @@ namespace MisCanchas.Controllers
         {
             try
             {
-                var types = await _movementService.GetType();
+                var types = await _movementService.GetTypes();
                 return types.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
             }
             catch (Exception ex)
