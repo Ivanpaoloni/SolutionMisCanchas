@@ -85,7 +85,7 @@ namespace MisCanchas.Controllers
             }
             else
             {
-                return LocalRedirect(addClientViewModel.UrlRetorno);
+                return LocalRedirect(addClientViewModel.UrlRetorno + "&clientId=" + client.ClientId);
             }
         }
 

@@ -42,7 +42,6 @@ namespace MisCanchas.Services
                 movements = _misCanchasDbContext.Movements.Where(m => m.MovementType == movementType);
                 return movements;
             }
-
             if (date.HasValue)
             {
                 movements = _misCanchasDbContext.Movements.Where(m => m.DateTime.Date == date.Value.Date);
@@ -53,8 +52,6 @@ namespace MisCanchas.Services
             var allMovements = await _misCanchasDbContext.Movements.ToListAsync();
             var movementsq = allMovements.AsQueryable();
             return movementsq;
-
-
         }
         public async Task Add(Movement movement)
         {
@@ -81,15 +78,13 @@ namespace MisCanchas.Services
             await _misCanchasDbContext.Movements.AddAsync(movement);
             await _misCanchasDbContext.SaveChangesAsync();
         }
-
         public Task Update(Movement movement)
         {
             throw new NotImplementedException();
         }
 
-
         //Movement types
-        public async Task<IQueryable<MovementType>> GetType()
+        public async Task<IQueryable<MovementType>> GetTypes()
         {
            
             var movementTypes = await _misCanchasDbContext.MovementTypes.ToListAsync();
@@ -110,7 +105,6 @@ namespace MisCanchas.Services
             await _misCanchasDbContext.MovementTypes.AddAsync(movementType);
             await _misCanchasDbContext.SaveChangesAsync();
         }
-        
         public async Task UpdateType(MovementType movementType)
         {
             var type = await _misCanchasDbContext.MovementTypes.FirstOrDefaultAsync(x => x.Id == movementType.Id);
@@ -121,8 +115,6 @@ namespace MisCanchas.Services
                 await _misCanchasDbContext.SaveChangesAsync();
             }
         }
-
-
         public async Task DeleteType(MovementType movementType)
         {
             _misCanchasDbContext.MovementTypes.Remove(movementType);

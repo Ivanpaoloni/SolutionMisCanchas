@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace MisCanchas.Models
 {
-    public class DeleteTurnViewModel
+    public class TurnViewModel
     {
         [Display(Name = "Id")]
         public int TurnId { get; set; }
@@ -13,6 +14,9 @@ namespace MisCanchas.Models
         [Required(ErrorMessage = "El campo {0} es requerido.")]
         [Display(Name = "Cliente")]
         public int ClientId { get; set; }
+        public IEnumerable<SelectListItem>? Clients { get; set; }
+        [Required(ErrorMessage = "El campo {0} es requerido.")]
+        [Display(Name = "Precio")]
         public decimal Price { get; set; }
         public bool Paid { get; set; }
     }

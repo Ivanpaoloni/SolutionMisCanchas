@@ -22,7 +22,6 @@ namespace MisCanchas.Services
             var field = await misCanchasDbContext.Fields.FirstOrDefaultAsync();
             return field;
         }
-
         public async Task Update(int openHour, int closeHour, string name, decimal price)
         {
             var field = await Get();
@@ -35,15 +34,6 @@ namespace MisCanchas.Services
                 misCanchasDbContext.Fields.Update(field);
                 await misCanchasDbContext.SaveChangesAsync();
             }
-
-            //var field1 = new Field()
-            //{
-            //    OpenHour = openHour,
-            //    CloseHour = closeHour,
-            //};
-            //await misCanchasDbContext.AddAsync(field1);
-            //await misCanchasDbContext.SaveChangesAsync();
-
         }
     }
 }

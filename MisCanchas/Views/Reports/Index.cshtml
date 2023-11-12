@@ -1,3 +1,85 @@
-﻿@{
-    ViewData["Title"] = "Reportes - Inicio";
+﻿@model List<ReportViewModel>
+@{
+	ViewData["Title"] = "Reportes Mensuales";
 }
+
+<h1><i class="bi bi-graph-up"></i> Reportes mensuales</h1>
+<br />
+
+@*reportes graficos *@
+
+<html>
+<head>
+	<script>
+		window.onload = function () {
+
+			var chart = new CanvasJS.Chart("chartContainer", {
+				animationEnabled: true,
+				title: {
+					text: " ",
+				},
+				toolTip: {
+					shared: true
+				},
+				data: [{
+					type: "line",
+					name: "Monto recaudado",
+					showInLegend: true,
+					yValueFormatString: "$###",
+					xValueType: "dateTime",
+					dataPoints: @Html.Raw(ViewBag.DataPoints1)
+							}, {
+					type: "line",
+					name: "Egresos",
+					showInLegend: true,
+					dataPoints: @Html.Raw(ViewBag.DataPoints3)
+					}, {
+					type: "line",
+					name: "Ingresos",
+					showInLegend: true,
+					dataPoints: @Html.Raw(ViewBag.DataPoints2)
+					}]
+			});
+			chart.render();
+
+		}
+	</script>
+</head>
+<body>
+	<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+	<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+</body>
+</html>
+
+<br />
+@*reportes mvc.grid *@
+
+<div class="row">
+	<div class="col-md-12">
+		@Html.Grid(Model).Named("Reportes Mensuales")
+	</div>
+</div>
+
+@(
+Html
+	.Grid(Model)
+	.Build(columns =>
+	{
+		columns.Add(model => model.Date.ToString("MMMM yyyy")).Titled("Fecha").Sortable(false);
+		columns.Add(model => model.Booking).Titled("Reservas").Sortable(true);
+		columns.Add(model => model.Canceled).Titled("Cancelaciones").Sortable(true);
+		columns.Add(model => model.In).Titled("Ingresos").Sortable(true);
+		columns.Add(model => model.Out).Titled("Egresos").Sortable(true);
+		columns.Add(model => model.Amount).Titled("Balance").Sortable(true);
+	})
+	@*.Filterable(GridFilterCase.Lower)*@
+	.Using(GridFilterMode.Header)
+	.Empty("No data found")
+	.Pageable(pager => { pager.RowsPerPage = 12; })
+)
+
+
+@section Scripts {
+		<partial name="_ValidationScriptsPartial" />
+}  
+

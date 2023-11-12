@@ -1,9 +1,9 @@
 ﻿@using MisCanchas.Services;
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"] - MisCanchas</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -67,26 +67,18 @@
                                 
                             </ul>
                         </li>
-                        
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-graph-up"></i> Reportes
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="index"><i class="bi bi-graph-up"></i> Inicio</a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Month"><i class="bi bi-graph-up"></i> Reportes Mensuales</a>
-                            </ul>
+
+                        <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="index"><i class="bi bi-graph-up"></i> Reportes</a>
                         </li>
+                        
 
                         @if (User.IsInRole(Constants.RollAdmin))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="SistemAdmin" asp-action="index"><i class="bi bi-gear-fill"></i> Administración</a>
                             </li>
+                            
                         }
 
                     </ul>
@@ -96,18 +88,16 @@
             </div>
         </nav>
     </header>
-    <div class="container ">
+    <div class="container">
         <main role="main" class="pb-3 ">
             @RenderBody()
         </main>
     </div>
-    <div class="container">
-        <footer class="border-top footer text-muted" >
-            <div class="container">
-                &copy; 2023 - MisCanchas - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </footer>
-    </div>
+    <footer class="border-top footer text-muted text-center" >
+        <div class="container">
+            &copy; 2023 - MisCanchas - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -18,11 +18,22 @@
         <input asp-for="TurnDateTime" type="datetime-local" step="3600" class="form-control"/>
         <span asp-validation-for="TurnDateTime" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="Price" class="form-label"></label>
-        <input asp-for="Price" class="form-control" readonly/>
-        <span asp-validation-for="Price" class="text-danger"></span>
+
+    
+    <div class="row mb-3">
+        <div class="col-sm-2 form-check">
+            <label class="form-check-label">Pagado</label>
+            <input type="checkbox" class="form-check-input" asp-for="Paid" />
+        </div>
+        <div class="col-sm-1">
+            <label asp-for="Price" class="form-label"></label>
+        </div>
+        <div class="col-sm">
+            <input asp-for="Price" class="form-control" readonly />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
     </div>
+    
     <button type="submit" class="btn btn-success">Guardar</button>
     <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
 
