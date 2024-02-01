@@ -63,5 +63,14 @@ namespace MisCanchas.Services
             Create("admin@admin","aA123456");
         }
 
+        public async Task Delete(string email)
+        {
+            var adminSelected = await misCanchasDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (adminSelected != null)
+            {
+                misCanchasDbContext.Users.Remove(adminSelected);
+                misCanchasDbContext.SaveChanges();
+            }
+        }
     }
 }

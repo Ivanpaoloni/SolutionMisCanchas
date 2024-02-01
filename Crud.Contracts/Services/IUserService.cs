@@ -14,5 +14,6 @@ namespace MisCanchas.Contracts.Services
         Task<IdentityUser> Get(string email);
         Task<bool> IsAdmin(string email);
         Task<IQueryable<IdentityUser>> List();
+        Task Delete(string email);
     }
 }

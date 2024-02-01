@@ -28,11 +28,6 @@ namespace MisCanchas.Controllers
             this._reportService = reportService;
         }
 
-		//public async Task<IActionResult> Index()
-		//{
-
-		//	return View();
-		//}
 		[HttpGet]
         public async Task<IActionResult> Index()
         {
