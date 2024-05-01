@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
@@ -27,8 +28,47 @@ namespace MisCanchas.Services
             var report = await misCanchasDbContext.Reports
                 .FirstOrDefaultAsync(t => t.Date.Month == month && t.Date.Year == year);
 
-            return report;
+            return report ?? new Report();
         }
+        public async Task<IQueryable<Report>> Get(DateTime start, DateTime end)
+        {
+            List<Report> reports = new List<Report>();
+            var list = _turnService.GetByDateRange(start, end).Result.OrderBy(x => x.TurnDateTime);
+
+            foreach (var turn in list)
+            {
+                var report = reports.FirstOrDefault(r => r.Date.Month == turn.TurnDateTime.Month && r.Date.Year == turn.TurnDateTime.Year);
+                if (report == null)
+                {
+                    report = new Report
+                    {
+                        In = 0,
+                        Out = 0,
+                        Booking = 1,
+                        Amount = 0,
+                        Date = turn.TurnDateTime.Date
+                    };
+                    if (turn.Paid)
+                    {
+                        report.In += turn.Price;
+                        report.Amount += turn.Price;
+                    }
+                    reports.Add(report);
+                }
+                else
+                {
+                    report.Booking++;
+                    if (turn.Paid)
+                    {
+                        report.In += turn.Price;
+                        report.Amount += turn.Price;
+                    }
+                }
+            }
+            IQueryable<Report> reportsq = reports.AsQueryable();
+            return reportsq;
+        }
+
         public async Task<IQueryable<Report>> GetAll()
         {
             var list = await misCanchasDbContext.Reports.ToListAsync();

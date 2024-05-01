@@ -9,7 +9,7 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="mb-3">
         <label asp-for="ClientId" class="form-label"></label>
-        <select asp-for="ClientId" asp-items="Model.Clients.OrderBy(x=>x.Text)" class="form-select"></select><br />
+        <select asp-for="ClientId" asp-items="Model.Clients?.OrderBy(x=>x.Text)" class="form-select"></select><br />
         <a class="btn btn-sm btn-success" asp-controller="Clients" asp-route-urlRetorno="@ViewBag.UrlRetorno" asp-action="Add">Nuevo Cliente</a>
         <span asp-validation-for="ClientId" class="text-danger"></span>
     </div>

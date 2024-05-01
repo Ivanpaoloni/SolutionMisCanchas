@@ -31,7 +31,17 @@ namespace MisCanchas.Controllers
 		[HttpGet]
         public async Task<IActionResult> Index()
         {
-            var list = await _reportService.GetAll();
+            // Obtener la fecha actual
+            DateTime now = DateTime.Now;
+            // Calcular la fecha hace seis meses
+            DateTime start = now.AddMonths(-6);
+		    // Calcular la fecha dentro de seis meses
+		    DateTime end = now.AddMonths(6);
+            // Filtrar la lista para incluir solo las fechas dentro del rango
+            //List<ReportViewModel> filteredList = listModel.Where(f => f.Date >= start && f.Date <= end) .ToList();
+            //List<ReportViewModel> filteredList = _reportService.Get(start, end);
+
+            var list = await _reportService.Get(start, end);
             var model = new ReportViewModel();
             List<ReportViewModel> listModel = new List<ReportViewModel>();
             foreach (var report in list)
@@ -49,18 +59,8 @@ namespace MisCanchas.Controllers
                 listModel.Add(reportViewModel);
             }
 
-            // Obtener la fecha actual
-            DateOnly now = DateOnly.FromDateTime(DateTime.Now);
-		    // Calcular la fecha hace seis meses
-		    DateOnly start = now.AddMonths(-6);
-		    // Calcular la fecha dentro de seis meses
-		    DateOnly end = now.AddMonths(6);
-            // Filtrar la lista para incluir solo las fechas dentro del rango
-            List<ReportViewModel> filteredList = listModel.Where(f => f.Date >= start && f.Date <= end) .ToList();
 
-
-            List<ReportViewModel> filteredList = list.ToList();
-			filteredList = filteredList.OrderBy(x => x.Date).ToList();
+			var filteredList = listModel.OrderBy(x => x.Date).ToList();
 
 			List<DataPoint> dataPoints1 = new List<DataPoint>();
 			List<DataPoint> dataPoints2 = new List<DataPoint>();
@@ -69,7 +69,7 @@ namespace MisCanchas.Controllers
             {
                 dataPoints1.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Amount)));
                 dataPoints2.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.In)));
-                dataPoints3.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Out)));
+                dataPoints3.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Booking)));
             }
 
 			ViewBag.DataPoints1 = JsonConvert.SerializeObject(dataPoints1);

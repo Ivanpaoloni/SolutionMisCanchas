@@ -41,7 +41,7 @@
         <label asp-for="MovementTypeId" class="form-label"> Tipo de movimiento</label>
         <div class="row">
             <div class="mb-3 col-sm-4">
-                <select asp-for="MovementTypeId" asp-items="Model.MovementTypes.OrderBy(x => x.Text)" class="form-select"></select><br />
+                <select asp-for="MovementTypeId" asp-items="Model.MovementTypes?.OrderBy(x => x.Text)" class="form-select"></select><br />
             </div>
             <div class="mb-3 col-sm-4">
                 <a href="types" class="btn btn-success">Gestionar categorias</a>
