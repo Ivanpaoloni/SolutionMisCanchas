@@ -59,6 +59,7 @@ namespace MisCanchas.Controllers
             List<ReportViewModel> filteredList = listModel.Where(f => f.Date >= start && f.Date <= end) .ToList();
 
 
+            List<ReportViewModel> filteredList = list.ToList();
 			filteredList = filteredList.OrderBy(x => x.Date).ToList();
 
 			List<DataPoint> dataPoints1 = new List<DataPoint>();
