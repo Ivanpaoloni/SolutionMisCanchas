@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MisCanchas.Services
 {
@@ -24,14 +25,14 @@ namespace MisCanchas.Services
             this.cashService = cashService;
         }
         //Movements
-        public async Task<IQueryable<Movement>> Get(int? id = null, MovementType movementType = null, DateTime? date = null)
+        public async Task<IQueryable<Movement>> Get(int? id = null, MovementType? movementType = null, DateTime? date = null)
         {
-            IQueryable<Movement> movements = null;
+            IQueryable<Movement> movements = new List<Movement>().AsQueryable();
 
             if (id.HasValue)
             {
                 var movement = await _misCanchasDbContext.Movements.FindAsync(id);
-                if(movement != null)
+                if (movement != null)
                 {
                     movements.Append(movement);
                     return movements;
@@ -53,6 +54,12 @@ namespace MisCanchas.Services
             var movementsq = allMovements.AsQueryable();
             return movementsq;
         }
+
+        public async Task<IQueryable<Movement>> Get(DateTime start, DateTime end)
+        {
+            var movements = await _misCanchasDbContext.Movements.Where(m => m.DateTime.Date >= start && m.DateTime.Date <= end).ToListAsync();
+            return movements.AsQueryable();
+        }
         public async Task Add(Movement movement)
         {
             var cash = await cashService.Get();
@@ -72,8 +79,10 @@ namespace MisCanchas.Services
             }
             else
             {
+                //movement type is not incremental
                 movement.CurrentBalance = cash.Amount - movement.Amount;
                 await cashService.Update(-movement.Amount);
+                movement.Amount = -movement.Amount;
             }
             await _misCanchasDbContext.Movements.AddAsync(movement);
             await _misCanchasDbContext.SaveChangesAsync();
@@ -86,7 +95,7 @@ namespace MisCanchas.Services
         //Movement types
         public async Task<IQueryable<MovementType>> GetTypes()
         {
-           
+
             var movementTypes = await _misCanchasDbContext.MovementTypes.ToListAsync();
             var movementTypesq = movementTypes.AsQueryable();
             return movementTypesq;

@@ -11,7 +11,8 @@ namespace MisCanchas.Contracts.Services
     public interface IMovementService
     {
         //movimientos
-        Task <IQueryable<Movement>> Get(int? id = null, MovementType movementType = null, DateTime? fecha = null);
+        Task<IQueryable<Movement>> Get(int? id = null, MovementType movementType = null, DateTime? fecha = null);
+        Task<IQueryable<Movement>> Get(DateTime start, DateTime end);
         Task Add(Movement movement);
         Task Update(Movement movement);
 
@@ -23,5 +24,5 @@ namespace MisCanchas.Contracts.Services
         Task UpdateType(MovementType movementType);
     }
 
-    
+
 }

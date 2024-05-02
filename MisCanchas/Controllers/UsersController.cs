@@ -143,11 +143,37 @@ namespace MisCanchas.Controllers
             //validacion para no editar el administrador en uso.
             if (User.Identity.Name == model.Email)
             {
-                return RedirectToAction("List", routeValues: new { message = "No puede editar una cuenta en uso."  });
+                return RedirectToAction("List", routeValues: new { message = "No puede editar una cuenta en uso." });
 
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = Constants.RollAdmin)]
+        public async Task<IActionResult> Delete(UserViewModel model)
+        {
+            model.IsAdmin = userService.IsAdmin(model.Email).Result;
+            if (!ModelState.IsValid)
+            {
+                return NotFound();
+            }
+
+            //validacion para no editar el administrador en uso.
+            if (User.Identity.Name == model.Email)
+            {
+                return RedirectToAction("Delete", routeValues: new { message = "No puede eliminar una cuenta en uso." });
+
+            }
+            var user = await userService.Get(model.Email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            await userService.Delete(model.Email);
+            return RedirectToAction("List", routeValues: new { message = "Se ha eliminado correctamente el usuario " + model.Email });
         }
 
 

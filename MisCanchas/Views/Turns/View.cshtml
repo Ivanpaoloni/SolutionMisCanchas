@@ -24,7 +24,7 @@
             <label asp-for="ClientId" class="mt-2"></label>
         </div>
         <div class="col-sm">
-            <select asp-for="ClientId" asp-items="Model.Clients.OrderBy(x=>x.Text)" class="form-select"></select><br />
+            <select asp-for="ClientId" asp-items="Model.Clients?.OrderBy(x=>x.Text)" class="form-select"></select><br />
             <span asp-validation-for="ClientId" class="text-danger"></span>
         </div>
         <div class="col-sm-1">

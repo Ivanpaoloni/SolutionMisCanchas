@@ -32,7 +32,8 @@
                 columns.Add(model => model.Email).Titled("Usuario").Sortable(true).Filterable(GridFilterCase.Lower);
                 columns.Add(model => model.IsAdmin).Width(30).Titled("Admin").Sortable(true);
                 columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Editar Rol", "EditRol", new  { o.Email }, new { @class = "btn btn-secondary" }));
-        })
+                columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Eliminar", "Delete", new { o.Email }, new { @class = "btn btn-danger eliminar-usuario" }));
+                })
         .Using(GridFilterMode.Header)
         .Empty("No data found")
         .Pageable(pager => { pager.RowsPerPage = 10; })
@@ -44,4 +45,33 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Espera a que se cargue el documento
+        document.addEventListener("DOMContentLoaded", function () {
+            // Obtiene todos los elementos con la clase 'eliminar-usuario'
+            var elementosEliminar = document.querySelectorAll('.eliminar-usuario');
+
+            // Agrega un listener de clic a cada elemento
+            elementosEliminar.forEach(function (elemento) {
+                elemento.addEventListener('click', function (e) {
+                    // Prevención de la acción predeterminada del enlace
+                    e.preventDefault();
+
+                    // Obtiene la URL de destino del enlace
+                    var url = this.getAttribute('href');
+
+                    // Muestra una ventana emergente de confirmación
+                    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                        // Si el usuario confirma, redirige a la URL de eliminación
+                        window.location.href = url;
+                    } else {
+                        // Si el usuario cancela, no hacer nada
+                        return false;
+                    }
+                });
+            });
+        });
+    </script>
+
 }
