@@ -24,7 +24,11 @@ Panel de Reportes (reportes de ingresos y egresos, balances).
 Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion de usuarios) contra el usuario estandar.
 <hr/>
 MockUps:
-![inicio_3434]([https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/3478ce23-fd65-4f69-8231-71f335cfab65](https://github-production-user-asset-6210df.s3.amazonaws.com/93292231/327607859-3478ce23-fd65-4f69-8231-71f335cfab65.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240502%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240502T225057Z&X-Amz-Expires=300&X-Amz-Signature=29a42e0bb7883ced25920ed6530443ca15f6f54dd4c36d95a5fabb563419202f&X-Amz-SignedHeaders=host&actor_id=93292231&key_id=0&repo_id=643436267))
+!inicio_3434
+![inicio_3434](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/1b569ebd-7990-491a-97c6-f2ad2602878b)
+![800shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/df27ee64-4553-4bc0-b61d-ccae39e17d6c)
+![664shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/07afb34d-b879-4e21-b794-f78d70528325)
+![361shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/c831aa21-f9df-4a8b-9c3f-6ff8ed17b299)
 
 
 Views:
