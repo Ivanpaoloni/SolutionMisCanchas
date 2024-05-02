@@ -17,15 +17,14 @@ Panel de Gestion de turnos con grilla horaria ajustada al rango horario determin
 <br/>
 Panel de Gestion de Clientes con su respectivo CRUD. 
 <br/>
-Panel de Reportes (reportes de ingresos y egresos).
+Panel de Caja (registracion de ingresos y egresos, etc).
+<br/>
+Panel de Reportes (reportes de ingresos y egresos, balances).
 <br/>
 Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion de usuarios) contra el usuario estandar.
 <hr/>
 MockUps:
-![785shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/d837630c-ffef-406a-99f4-81d119a1cde7)
-![664shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/2ecc5ea8-efbb-4283-84c0-707c58815eb4)
-![361shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/38f76d84-b1a4-4d35-a5b6-0085c47c7c93)
-![800shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/f6b38a4c-60fe-47fc-bceb-4ee429d6c25c)
+![785shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/452a4f60-4333-415b-a530-e0560d9d0d3a)
 
 
 Views:
