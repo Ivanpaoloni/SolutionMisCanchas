@@ -24,18 +24,19 @@ Panel de Reportes (reportes de ingresos y egresos, balances).
 Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion de usuarios) contra el usuario estandar.
 <hr/>
 MockUps:
-!inicio_3434
-![inicio_3434](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/1b569ebd-7990-491a-97c6-f2ad2602878b)
-![800shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/df27ee64-4553-4bc0-b61d-ccae39e17d6c)
-![664shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/07afb34d-b879-4e21-b794-f78d70528325)
-![361shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/c831aa21-f9df-4a8b-9c3f-6ff8ed17b299)
+![inicio_3434](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/e64ba8f8-db65-43ba-bed4-24eb14b4bf47)
+![664shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/c77af314-6002-4cea-953f-ba43fde80fed)
+![361shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/e5d11da2-f266-4860-b655-f1a7a7577bfe)
+![800shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/e146fb0e-2bfd-492d-8d73-5e6330e94a13)
+
 
 
 Views:
 ![Captura6](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/c17eb385-fbd2-4362-820e-8f1d3fc5ed06)
 ![inicio](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/2ecc5ea8-efbb-4283-84c0-707c58815eb4)
 ![turnos](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/0eb32a47-1454-480a-814a-38765f6dfc7e)
-![reportes](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/1c06fa5c-de8f-4fba-9b2e-024366c4efa0)![administracion](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/f0e61def-ee54-4e17-84cc-4a70659b0ff7)
+![reportes](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/1c06fa5c-de8f-4fba-9b2e-024366c4efa0)
+![administracion](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/f0e61def-ee54-4e17-84cc-4a70659b0ff7)
 ![gestionDeCampo](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/bd6cbaa7-30e4-478f-96e8-a21b7724c037)
 ![AltaCliente](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/839e7a77-ff4c-409e-a5b6-65f057929430)
 ![clientes](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/6cc427a2-dbfd-4f2a-a72e-1249dd9858cc)
