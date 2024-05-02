@@ -24,7 +24,7 @@ Panel de Reportes (reportes de ingresos y egresos, balances).
 Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion de usuarios) contra el usuario estandar.
 <hr/>
 MockUps:
-![785shots_so](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/452a4f60-4333-415b-a530-e0560d9d0d3a)
+![inicio_3434](https://github.com/Ivanpaoloni/SolutionMisCanchas/assets/93292231/3478ce23-fd65-4f69-8231-71f335cfab65)
 
 
 Views:
