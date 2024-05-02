@@ -69,7 +69,7 @@ namespace MisCanchas.Controllers
             {
                 dataPoints1.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Amount)));
                 dataPoints2.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.In)));
-                dataPoints3.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Booking)));
+                dataPoints3.Add(new DataPoint(report.Date.ToString("MMMM yyyy"), ((int)report.Out)));
             }
 
 			ViewBag.DataPoints1 = JsonConvert.SerializeObject(dataPoints1);

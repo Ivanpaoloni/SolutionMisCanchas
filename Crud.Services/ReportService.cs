@@ -15,10 +15,12 @@ namespace MisCanchas.Services
     {
         private readonly MisCanchasDbContext misCanchasDbContext;
         private readonly ITurnService _turnService;
-        public ReportService(MisCanchasDbContext misCanchasDbContext, ITurnService turnService)
+        private readonly IMovementService _movementService;
+        public ReportService(MisCanchasDbContext misCanchasDbContext, ITurnService turnService, IMovementService movementService)
         {
             this.misCanchasDbContext = misCanchasDbContext;
             this._turnService = turnService;
+            this._movementService = movementService;
         }
 
         public async Task<Report> Get(DateTime dateTime)
@@ -42,28 +44,55 @@ namespace MisCanchas.Services
                 {
                     report = new Report
                     {
-                        In = 0,
-                        Out = 0,
                         Booking = 1,
-                        Amount = 0,
                         Date = turn.TurnDateTime.Date
                     };
-                    if (turn.Paid)
-                    {
-                        report.In += turn.Price;
-                        report.Amount += turn.Price;
-                    }
                     reports.Add(report);
                 }
                 else
                 {
                     report.Booking++;
-                    if (turn.Paid)
+                }
+            }
+
+            var listMovements = await _movementService.Get(start, end);
+            var listMovementsType  = await _movementService.GetTypes();
+
+            foreach (var movement in listMovements)
+            {
+                movement.MovementType = listMovementsType.FirstOrDefault(x => x.Id == movement.MovementTypeId)?? new MovementType();
+                var report = reports.FirstOrDefault(r => r.Date.Month == movement.DateTime.Month && r.Date.Year == movement.DateTime.Year);
+                if (report == null)
+                {
+                    report = new Report
                     {
-                        report.In += turn.Price;
-                        report.Amount += turn.Price;
+                        In = 0,
+                        Out = 0,
+                        Amount = 0,
+                        Date = movement.DateTime.Date
+                    };
+                    if(movement.MovementType.Incremental == false)
+                    {
+                        report.Out -= movement.Amount;
+                    }
+                    else
+                    {
+                        report.In += movement.Amount;
+                    }
+                    reports.Add(report);
+                }
+                else
+                {
+                    if (movement.MovementType.Incremental == false)
+                    {
+                        report.Out -= movement.Amount;
+                    }
+                    else
+                    {
+                        report.In += movement.Amount;
                     }
                 }
+                report.Amount += movement.Amount;
             }
             IQueryable<Report> reportsq = reports.AsQueryable();
             return reportsq;
