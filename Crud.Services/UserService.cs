@@ -33,7 +33,11 @@ namespace MisCanchas.Services
         public async Task<IdentityUser> Get(string email)
         {
             var user = await misCanchasDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
-            return user;
+            if(user != null)
+            {
+                return user;
+            }
+            return new IdentityUser();
         }
 
         public async Task<bool> IsAdmin(string email)

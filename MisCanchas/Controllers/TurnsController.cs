@@ -42,13 +42,18 @@ namespace MisCanchas.Controllers
         {
             var turns = await _turnService.GetByDateRange(start, end);
             var clients = await _clientService.GetClients();
+
+            var clientDictionary = clients.ToDictionary(c => c.ClientId, c => c);
+
             foreach (var turn in turns)
             {
-                var client = await _clientService.GetSingleClient(turn.ClientId);
-                turn.Client.ClientName = client.ClientName;
-                turn.Client.ClientTelephone = client.ClientTelephone;
-                turn.Client.ClientEmail = client.ClientEmail;
-                turn.Client.NationalIdentityDocument = client.NationalIdentityDocument;
+                if (clientDictionary.TryGetValue(turn.ClientId, out var client))
+                {
+                    turn.Client.ClientName = client.ClientName;
+                    turn.Client.ClientTelephone = client.ClientTelephone;
+                    turn.Client.ClientEmail = client.ClientEmail;
+                    turn.Client.NationalIdentityDocument = client.NationalIdentityDocument;
+                }
             }
             //convierto lista de turnos a listado Json
             var turnsJson = turns.Select(t => new
@@ -93,19 +98,21 @@ namespace MisCanchas.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add(DateTime dateTime, int? clientId = null)
+        public async Task<IActionResult> Add(DateTime? dateTime, int? clientId = null)
         {
-            if(dateTime.Year == 0001)
+            if (!dateTime.HasValue)
             {
-                dateTime = DateTime.Today;
+                //si es un nuevo turno sin fecha seleccionada, se asigna el dia actual, con la hora actual +1.
+                dateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour + 1, 0, 0);
+
             }
             else
             {
-                dateTime = dateTime.AddHours(-3); //UTC-3
+                dateTime = dateTime.Value.AddHours(-3); //UTC-3
             }
 
             var viewModel = new AddTurnViewModel();
-            viewModel.TurnDateTime = dateTime;
+            viewModel.TurnDateTime = dateTime.Value;
             viewModel.Clients = await GetClients();
 
             // Logica para recuperar el cliente pasado por URL y cargarlo por defecto en el selector al crear nuevo turno
@@ -213,11 +220,11 @@ namespace MisCanchas.Controllers
                 Turn turn = new Turn
                 {
                     TurnId = viewModel.TurnId,
-                    TurnDateTime = viewModel.TurnDateTime, 
+                    TurnDateTime = viewModel.TurnDateTime,
                     //Client = await _clientService.GetSingleClient(viewModel.ClientId),
                     ClientId = viewModel.ClientId,
                     Price = viewModel.Price,
-                    Paid= viewModel.Paid
+                    Paid = viewModel.Paid
                 };
 
                 await _turnService.Update(turn);
@@ -259,7 +266,7 @@ namespace MisCanchas.Controllers
                 {
                     TurnId = turnSelected.Result.TurnId,
                     TurnDateTime = turnSelected.Result.TurnDateTime,
-                    ClientId = turnSelected.Result.ClientId,   
+                    ClientId = turnSelected.Result.ClientId,
                     Price = turnSelected.Result.Price,
                     Paid = turnSelected.Result.Paid
                 };
@@ -275,7 +282,8 @@ namespace MisCanchas.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(DeleteTurnViewModel model)
         {
-            try{
+            try
+            {
                 //if (model.TurnDateTime < DateTime.Now)
                 //{
                 //    ModelState.AddModelError(nameof(model.TurnDateTime), $"La reserva del {model.TurnDateTime} no puede ser eliminada porque ya no se encuentra disponible.");
@@ -326,7 +334,7 @@ namespace MisCanchas.Controllers
             TimeSpan openHour = TimeSpan.FromHours(range.Result.OpenHour);
             string openHourFormat = openHour.ToString(@"hh\:mm"); // Formatear el objeto TimeSpan
             var closeHour = range.Result.CloseHour;
-            string closeHourFormat = closeHour.ToString("00")+":00"; // Formatear el objeto TimeSpan
+            string closeHourFormat = closeHour.ToString("00") + ":00"; // Formatear el objeto TimeSpan
             var rangeJson = new
             {
                 slotMinTime = openHour,
