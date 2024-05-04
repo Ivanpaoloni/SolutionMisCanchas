@@ -70,7 +70,7 @@ Html
     {
         columns.Add(model => model.Date.ToString("MMMM yyyy")).Titled("Fecha").Sortable(false);
         columns.Add(model => model.Booking).Titled("Reservas").Sortable(true);
-        columns.Add(model => model.Canceled).Titled("Cancelaciones").Sortable(true);
+        //columns.Add(model => model.Canceled).Titled("Cancelaciones").Sortable(true);
         columns.Add(model => model.In).Titled("Ingresos").Sortable(true);
         columns.Add(model => model.Out).Titled("Egresos").Sortable(true);
         columns.Add(model => model.Amount).Titled("Balance").Sortable(true);

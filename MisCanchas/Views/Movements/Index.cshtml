@@ -38,7 +38,10 @@
                         {
                             <li class="d-inline">
                                 <a class="row " href="">
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-1">
+                                        <i class="bi bi-@(m.MovementType.Incremental ? "arrow-up-right-circle " : "arrow-down-left-circle text-danger")" style="font-size: 200%;"></i>
+                                    </div>
+                                    <div class="col-sm-7">
                                         <p class="text-black mb-0">@m.Name <span class="text-black-50">(@m.Description)</span></p>
                                         <p class="text-black-50 mb-0">@m.MovementType.Name</p>
                                     </div>
