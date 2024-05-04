@@ -62,7 +62,15 @@ namespace MisCanchas.Services
         {
             var singleClient = await misCanchasDbContext.Clients.FirstOrDefaultAsync(c => c.ClientId == id);
 
+            if (singleClient == null)
+            {
+                // Opción 1: Lanza una excepción
+                throw new Exception("Cliente no encontrado");
+                // Opción 2: Devuelve un valor predeterminado
+                // return new Client();
+            }
             return singleClient;
         }
+
     }
 }

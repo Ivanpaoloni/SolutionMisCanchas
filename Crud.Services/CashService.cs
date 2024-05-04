@@ -22,6 +22,10 @@ namespace MisCanchas.Services
         public async Task<Cash> Get()
         {
             var cash = await misCanchasDbContext.Cash.FirstOrDefaultAsync();
+            if (cash == null)
+            {
+                throw new ArgumentException("Error al obtener la consulta");
+            }
             return cash;
         }
 
@@ -34,7 +38,6 @@ namespace MisCanchas.Services
                 misCanchasDbContext.Cash.Update(cash);   
                 await misCanchasDbContext.SaveChangesAsync();
             }
-
         }
     }
 }
