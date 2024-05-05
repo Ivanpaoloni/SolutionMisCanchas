@@ -38,7 +38,7 @@ namespace MisCanchas.Controllers
             try
             {
                 var movements = await _movementService.Get();
-                var cash = await _cashService.Get();
+                var cash = _cashService.GetDto();
                 ViewBag.Cash = cash.Amount;
                 if(movements.Count() >= 10)
                 {

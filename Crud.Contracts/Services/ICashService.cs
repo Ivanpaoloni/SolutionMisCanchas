@@ -1,10 +1,10 @@
-﻿using MisCanchas.Domain.Entities;
+﻿using MisCanchas.Contracts.Dtos.Cash;
 
 namespace MisCanchas.Contracts.Services
 {
     public interface ICashService
     {
-        Task<Cash> Get();
-        Task Update(decimal amount);
+        CashDto GetDto();
+        void UpdateDto(CashUpdateDto dto, bool saveChanges);
     }
 }
