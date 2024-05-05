@@ -1,10 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Query.Internal;
-using MisCanchas.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MisCanchas.Domain.Entities;
 
 namespace MisCanchas.Contracts.Services
 {

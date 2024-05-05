@@ -37,7 +37,7 @@ namespace MisCanchas.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add( string urlRetorno = null)
+        public IActionResult Add( string? urlRetorno = null)
         {
             //si la url esta vacia, por defecto redireccionar a /clients.
             if (urlRetorno is null)
