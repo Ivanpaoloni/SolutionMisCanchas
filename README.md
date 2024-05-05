@@ -7,6 +7,8 @@
 <br/>
 *Entity Framework core e Identity para el login.
 <br/>
+*Uso de Dto y AutoMapper para una correcta manipulacion de los datos, como un codigo limpio y eficiente para el mapeo de los mismos en sus respectivas entidades.
+<br/>
 *Grids con NonFactors.Grid.MVC6. (https://www.nuget.org/packages/NonFactors.Grid.Mvc6)
 <br/>
 *Grilla Horaria con FullCalendar.io Js (https://fullcalendar.io/)
