@@ -6,28 +6,19 @@
 
 <h3>Backend</h3>
 <p>*Arquitectura Onion</p>
-<br/>
 <p>*Entity Framework core e Identity para el login.</p>
-<br/>
 <p>*Uso de Dto y AutoMapper para una correcta manipulacion de los datos, como un codigo limpio y eficiente para el mapeo de los mismos en sus respectivas entidades.</p>
-<br/>
 
 <h3>Frontend</h3>
 <p>*Grids con NonFactors.Grid.MVC6. (https://www.nuget.org/packages/NonFactors.Grid.Mvc6)</p>
-<br/>
 <p>*Grilla Horaria con FullCalendar.io Js (https://fullcalendar.io/)</p>
-<br/>
 <p>*Graficos para reportes con  Canva Js (https://canvasjs.com/)</p>
 
 <hr/>
 <p>Panel de Gestion de turnos con grilla horaria ajustada al rango horario determinado. </p>
-<br/>
 <p>Panel de Gestion de Clientes con su respectivo CRUD. </p>
-<br/>
 <p>Panel de Caja (registracion de ingresos y egresos, etc).</p>
-<br/>
 <p>Panel de Reportes (reportes de ingresos y egresos, balances).</p>
-<br/>
 <p>Panel y funciones exclusivas para Admin de sistema (horarios de canchas, gestion de usuarios) contra el usuario estandar.</p>
 <hr/>
 
