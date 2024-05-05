@@ -3,17 +3,14 @@
 <h1> MisCanchas - ASP.MVC .NET Core 7.0 </h1>
 <p>Sistema de gestion de canchas de futbol, con sus respespectivas areas de administracion, CRUD de clientes, CRUD de turnos, CRUD de usuarios, reportes y demas.</p>
 <br/>
-
 <h3>Backend</h3>
 <p>*Arquitectura Onion</p>
 <p>*Entity Framework core e Identity para el login.</p>
 <p>*Uso de Dto y AutoMapper para una correcta manipulacion de los datos, como un codigo limpio y eficiente para el mapeo de los mismos en sus respectivas entidades.</p>
-
 <h3>Frontend</h3>
 <p>*Grids con NonFactors.Grid.MVC6. (https://www.nuget.org/packages/NonFactors.Grid.Mvc6)</p>
 <p>*Grilla Horaria con FullCalendar.io Js (https://fullcalendar.io/)</p>
 <p>*Graficos para reportes con  Canva Js (https://canvasjs.com/)</p>
-
 <hr/>
 <p>Panel de Gestion de turnos con grilla horaria ajustada al rango horario determinado. </p>
 <p>Panel de Gestion de Clientes con su respectivo CRUD. </p>
