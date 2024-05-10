@@ -4,11 +4,12 @@ namespace MisCanchas.Contracts.Services
 {
     public interface IUserService
     {
-        Task<IdentityResult> Create(string email, string password);
-        void CreateDefaultUser();
-        Task<IdentityUser> Get(string email);
-        Task<bool> IsAdmin(string email);
-        Task<IQueryable<IdentityUser>> List();
-        Task Delete(string email);
+        public Task<IdentityResult> Create(string email, string password);
+        public void Delete(string email);
+        public Task<IQueryable<IdentityUser>> List();
+        public Task<IdentityUser> Get(string email);
+        public Task<bool> IsAdmin(string email);
+        public void CreateDefaultUser();
+        public Task<IdentityRole<string>> GetRole(string email);
     }
 }

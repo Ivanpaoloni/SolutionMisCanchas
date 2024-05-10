@@ -135,6 +135,7 @@ namespace MisCanchas.Controllers
         public async Task<IActionResult> EditRol(UserViewModel model)
         {
             model.IsAdmin = userService.IsAdmin(model.Email).Result;
+            model.Role = userService.GetRole(model.Email).Result.ToString();
             if (!ModelState.IsValid)
             {
                 return NotFound();
@@ -172,7 +173,7 @@ namespace MisCanchas.Controllers
             {
                 return NotFound();
             }
-            await userService.Delete(model.Email);
+            userService.Delete(model.Email);
             return RedirectToAction("List", routeValues: new { message = "Se ha eliminado correctamente el usuario " + model.Email });
         }
 
@@ -188,6 +189,7 @@ namespace MisCanchas.Controllers
             {
                 return NotFound();
             }
+            await userManager.RemoveFromRoleAsync(user, Constants.RollUser);
             await userManager.AddToRoleAsync(user, Constants.RollAdmin);
             return RedirectToAction("List", routeValues: new {message = "Rol asignado correctamente a " + email });
         }
@@ -204,6 +206,7 @@ namespace MisCanchas.Controllers
             }
 
             await userManager.RemoveFromRoleAsync(user, Constants.RollAdmin);
+            await userManager.AddToRoleAsync(user, Constants.RollUser);
             return RedirectToAction("List", routeValues: new { message = "Rol quitado correctamente a " + email });
         }
     }
