@@ -103,7 +103,8 @@ namespace MisCanchas.Controllers
             if (!dateTime.HasValue)
             {
                 //si es un nuevo turno sin fecha seleccionada, se asigna el dia actual, con la hora actual +1.
-                dateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour + 1, 0, 0);
+                DateTime actual = DateTime.Now.AddHours(1);
+                dateTime = new DateTime(actual.Year, actual.Month, actual.Day, actual.Hour, 0, 0);
 
             }
             else

@@ -6,7 +6,7 @@
 
 <h1><i class="bi bi-person-fill-gear"></i> Listado de usuarios</h1>
 <hr />
-<a asp-action="regist" class="btn btn-primary">Crear nuevo usuario</a>
+<a asp-action="regist" class="btn btn-success">Crear nuevo usuario</a>
 <br />
 <br />
 @if(Model.Message is not null){
@@ -23,16 +23,15 @@
             @Html.Grid(Model.Users).Named("")
         </div>
     </div>
-
     @(
     Html
             .Grid(Model.Users)
             .Build(columns =>
             {
                 columns.Add(model => model.Email).Titled("Usuario").Sortable(true).Filterable(GridFilterCase.Lower);
-                columns.Add(model => model.IsAdmin).Width(30).Titled("Admin").Sortable(true);
-                columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Editar Rol", "EditRol", new  { o.Email }, new { @class = "btn btn-secondary" }));
-                columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Eliminar", "Delete", new { o.Email }, new { @class = "btn btn-danger eliminar-usuario" }));
+                    columns.Add(model => model.IsAdmin ? "<h2><i class='bi bi-check-circle-fill text-success'></i></h2>" : "<h2><i class='bi bi-x-circle-fill text-danger'></i></h2>").Width(30).Titled("Admin").Sortable(true).Css("text-center").Encoded(false);
+                columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Editar", "EditRol", new  { o.Email }, new { @class = "btn btn-secondary" }));
+                    columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Eliminar", "Delete", new { o.Email }, new { @class = "btn btn-secondary eliminar-usuario" }));
                 })
         .Using(GridFilterMode.Header)
         .Empty("No data found")

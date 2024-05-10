@@ -357,31 +357,31 @@
     text-align: center;
 }
 
-.mvc-grid-pager button {
-    border: 1px solid #dddddd;
-    box-sizing: content-box;
-    background: #ffffff;
-    padding: 0 0.25em;
-    line-height: 2.5;
-    cursor: pointer;
-    margin: 0.5em 0;
-    min-width: 2em;
-    color: #337ab7;
-}
+    .mvc-grid-pager button {
+        border: 1px solid #dddddd;
+        box-sizing: content-box;
+        background: #ffffff;
+        padding: 0 0.25em;
+        line-height: 2.5;
+        cursor: pointer;
+        margin: 0.5em 0;
+        min-width: 2em;
+        color: #198754;
+    }
 
-.mvc-grid-pager button:focus,
-.mvc-grid-pager button:hover {
-    background: #f7f7f7;
-    color: #014c8c;
-}
+    .mvc-grid-pager button:focus,
+    .mvc-grid-pager button:hover {
+        background: #f7f7f7;
+        color: #198754;
+    }
 
-.mvc-grid-pager .active,
-.mvc-grid-pager .active:focus,
-.mvc-grid-pager .active:hover {
-    border-color: #0275d8;
-    background: #0275d8;
-    color: #ffffff;
-}
+    .mvc-grid-pager .active,
+    .mvc-grid-pager .active:focus,
+    .mvc-grid-pager .active:hover {
+        border-color: #198754;
+        background: #198754;
+        color: #ffffff;
+    }
 
 .mvc-grid-pager [disabled],
 .mvc-grid-pager [disabled]:hover {
