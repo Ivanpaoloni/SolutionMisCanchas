@@ -9,14 +9,16 @@
 <a asp-action="regist" class="btn btn-success">Crear nuevo usuario</a>
 <br />
 <br />
-@if(Model.Message is not null){
+@if (Model.Message is not null)
+{
 
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <strong>@Model.Message</strong>
     </div>
 }
 
-@if (Model.Users is not null){
+@if (Model.Users is not null)
+{
 
     <div class="row">
         <div class="col-md-12">
@@ -24,21 +26,25 @@
         </div>
     </div>
     @(
-    Html
-            .Grid(Model.Users)
-            .Build(columns =>
-            {
-                columns.Add(model => model.Email).Titled("Usuario").Sortable(true).Filterable(GridFilterCase.Lower);
+        Html
+                .Grid(Model.Users)
+                .Build(columns =>
+                {
+                    columns.Add(model => model.UserName).Titled("Usuario").Sortable(true).Filterable(GridFilterCase.Lower);
+                    columns.Add(model => model.Email).Titled("Email").Sortable(true).Filterable(GridFilterCase.Lower);
+                    columns.Add(model => model.Role).Titled("Rol").Sortable(true).Filterable(GridFilterCase.Lower);
                     columns.Add(model => model.IsAdmin ? "<h2><i class='bi bi-check-circle-fill text-success'></i></h2>" : "<h2><i class='bi bi-x-circle-fill text-danger'></i></h2>").Width(30).Titled("Admin").Sortable(true).Css("text-center").Encoded(false);
-                columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Editar", "EditRol", new  { o.Email }, new { @class = "btn btn-secondary" }));
+                    columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Editar", "EditRol", new { o.Email, o.UserName, o.IsAdmin, o.Role }, new { @class = "btn btn-secondary" }));
                     columns.Add().Encoded(false).Width(30).RenderedAs(o => Html.ActionLink("Eliminar", "Delete", new { o.Email }, new { @class = "btn btn-secondary eliminar-usuario" }));
                 })
-        .Using(GridFilterMode.Header)
-        .Empty("No data found")
-        .Pageable(pager => { pager.RowsPerPage = 10; })
-    )
+            .Using(GridFilterMode.Header)
+            .Empty("No data found")
+            .Pageable(pager => { pager.RowsPerPage = 10; })
+        )
 
-}else{
+}
+else
+{
     <p>No hay usuarios para mostrar</p>
 }
 

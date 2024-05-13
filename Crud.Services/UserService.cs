@@ -1,32 +1,34 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
+using MisCanchas.Contracts.Dtos.User;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MisCanchas.Domain;
 
 namespace MisCanchas.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly MisCanchasDbContext misCanchasDbContext;
+        private readonly IMapper _mapper;
 
-        public UserService(UserManager<IdentityUser> userManager, MisCanchasDbContext misCanchasDbContext)
+        public UserService(UserManager<IdentityUser> userManager, MisCanchasDbContext misCanchasDbContext, IMapper mapper)
         {
-            this.userManager = userManager;
+            this._userManager = userManager;
             this.misCanchasDbContext = misCanchasDbContext;
+            this._mapper = mapper;
         }
 
-        public async Task<IdentityResult> Create(string email, string password)
+        public async Task<IdentityResult> Create(UserCreateDto dto)
         {
-            var user = new IdentityUser() { Email = email, UserName = email };
-            var result = await userManager.CreateAsync(user, password: password);
-
+            var user = this._mapper.Map<IdentityUser>(dto);
+            var result = await this.Create(user, dto.Password);
+            if (result.Succeeded)
+            {
+                await this.AddRol(user, Constants.RollUser);
+            }
             return result;
         }
 
@@ -44,6 +46,30 @@ namespace MisCanchas.Services
                 return true;
             }
             return false;
+        }
+
+        public async Task<IdentityResult> AddRol(IdentityUser user, string rol)
+        {
+            var role = rol.ToString();
+            if (role == null)
+            {
+                throw new ArgumentNullException("Debe especificar un rol");
+            }
+
+            var result = await this.InternalAddRol(user, role);
+            return result;
+        }
+
+        public async Task<IdentityResult> RemoveRol(IdentityUser user, string rol)
+        {
+            var role = rol.ToString();
+            if (role == null)
+            {
+                throw new ArgumentNullException("Debe especificar un rol");
+            }
+
+            var result = await this.InternalRemoveRol(user, role);
+            return result;
         }
 
         public async Task<IQueryable<IdentityUser>> List()
@@ -64,12 +90,12 @@ namespace MisCanchas.Services
 
         public void CreateDefaultUser()
         {
-            Create("admin@admin", "aA123456");
+            this?.Create(new IdentityUser { Email = "admin@admin", UserName = "admin" }, "aA123456");
         }
 
-        public Task< IdentityRole<string>> GetRole(string email)
+        public async Task<IdentityRole<string>> GetRole(string email)
         {
-            var role = this.InternalGetRoleByUser(email);
+            var role = await this.InternalGetRoleByUser(email);
             return role;
         }
 
@@ -100,11 +126,52 @@ namespace MisCanchas.Services
             }
             return userRole;
         }
+
         internal async Task<IdentityRole<string>> InternalGetRoleByUser(string email)
         {
             var roleId = this.InternalGetRolId(this.InternalGet(email: email).Result.Id);
             var role = await misCanchasDbContext.Roles.FirstOrDefaultAsync(x => x.Id == roleId.Result.RoleId);
+            if (role == null)
+            {
+                throw new ArgumentException("No se encontraron usuarios con este email");
+            }
             return role;
+        }
+
+        internal async Task<IdentityResult> Create(IdentityUser user, string password)
+        {
+            var result = await _userManager.CreateAsync(user, password: password);
+            if (!result.Succeeded)
+            {
+                throw new ArgumentException($"{result?.Errors?.FirstOrDefault()?.Description.ToString()}");
+            }
+            return result;
+        }
+
+        internal async Task<IdentityResult> InternalAddRol(IdentityUser user, string rol)
+        {
+            if (rol != null)
+            {
+                var result = await this._userManager.AddToRoleAsync(user, rol);
+                if (!result.Succeeded)
+                {
+                    throw new ArgumentException("Error al agregar el rol");
+                }
+            }
+            return new IdentityResult();
+        }
+
+        internal async Task<IdentityResult> InternalRemoveRol(IdentityUser user, string rol)
+        {
+            if (rol != null)
+            {
+                var result = await this._userManager.RemoveFromRoleAsync(user, rol);
+                if (!result.Succeeded)
+                {
+                    throw new ArgumentException("Error al remover el rol");
+                }
+            }
+            return new IdentityResult();
         }
     }
 }

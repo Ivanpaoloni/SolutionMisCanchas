@@ -14,6 +14,7 @@ namespace MisCanchas.Contracts.MappingProfiles.User
         public UserProfile()
         {
             CreateMap<IdentityUser, UserDto>().ReverseMap();
+            CreateMap<IdentityUser, UserCreateDto>().ReverseMap();
         }
     }
 }
