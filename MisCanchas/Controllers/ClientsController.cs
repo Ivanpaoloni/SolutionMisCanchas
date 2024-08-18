@@ -139,7 +139,7 @@ namespace MisCanchas.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int id, UpdateClientViewModel updateClientViewModel)
+        public async Task<IActionResult> Delete(int id)
         {
             var singleClient = _clientService.GetSingleClient(id);
             if (singleClient != null)

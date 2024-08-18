@@ -32,7 +32,8 @@ namespace MisCanchas.Controllers
         public async Task<IActionResult> Index()
         {
             //paso el nombre de la cancha por viewbag
-            var fieldName = _fieldService.Get().Result.Name;
+            var field = await _fieldService.Get();
+            var fieldName = field.Name;
             ViewBag.FieldName = fieldName;
             return View();
         }
@@ -222,7 +223,6 @@ namespace MisCanchas.Controllers
                 {
                     TurnId = viewModel.TurnId,
                     TurnDateTime = viewModel.TurnDateTime,
-                    //Client = await _clientService.GetSingleClient(viewModel.ClientId),
                     ClientId = viewModel.ClientId,
                     Price = viewModel.Price,
                     Paid = viewModel.Paid
