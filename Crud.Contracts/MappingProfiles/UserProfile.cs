@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MisCanchas.Contracts.MappingProfiles.User
+namespace MisCanchas.Contracts.MappingProfiles
 {
     public class UserProfile : Profile
     {

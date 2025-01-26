@@ -2,7 +2,7 @@
 using MisCanchas.Contracts.Dtos.Cash;
 using MisCanchas.Domain.Entities;
 
-namespace MisCanchas.Contracts.MappingProfiles.CashProfile
+namespace MisCanchas.Contracts.MappingProfiles
 {
     public class CashProfile : Profile
     {

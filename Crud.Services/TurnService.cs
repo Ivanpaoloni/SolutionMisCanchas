@@ -1,68 +1,54 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using MisCanchas.Contracts.Dtos.Turn;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 namespace MisCanchas.Services
 {
     public class TurnService : ITurnService
     {
         private readonly MisCanchasDbContext misCanchasDbContext;
         private readonly IFieldService _fieldService;
-		private readonly IMovementService _movementService;
+        private readonly IMovementService _movementService;
+        private readonly IMapper _mapper;
 
-		public TurnService(MisCanchasDbContext misCanchasDbContext, IFieldService fieldService, IMovementService movementService)
+        public TurnService(MisCanchasDbContext misCanchasDbContext, IFieldService fieldService, IMovementService movementService, IMapper mapper)
         {
             this.misCanchasDbContext = misCanchasDbContext;
             this._fieldService = fieldService;
-			this._movementService = movementService;
-		}
-        public async Task Add(DateTime dateTime, int id, decimal price, bool paid)
+            this._movementService = movementService;
+            _mapper = mapper;
+        }
+        public async Task<int> Create(TurnCreateDto dto, bool saveChanges = false)
         {
-            var dateTimeNormalized = dateTime.AddMinutes(-dateTime.Minute);
-            var turn = new Turn()
-            {
-                TurnDateTime = dateTimeNormalized,
-                ClientId = id,
-                Price = price,
-                Paid = paid
-            };
-            // Validaciones
-            TurnIsPast(turn); 
-            TurnDuplicateValidator(turn);
-            DateTimeRangeValidator(turn);
+            dto.TurnDateTime = dto.TurnDateTime.AddMinutes(-dto.TurnDateTime.Minute);
+            var turn = _mapper.Map<Turn>(dto);
 
-            await misCanchasDbContext.AddAsync(turn);
+            // Validaciones
+            ValidateTurn(turn);
+
+            var turnId = await Create(turn, false);
+
             // registra movimiento
             await GenerateMovement(turn);
 
-            await misCanchasDbContext.SaveChangesAsync();
+            if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
+            return turnId;
         }
-        public async Task Update(Turn turn)
+
+        public async Task Update(TurnUpdateDto dto, bool saveChanges = false)
         {
-            var turnq = await misCanchasDbContext.Turns.FindAsync(turn.TurnId);
+            var turn = _mapper.Map<Turn>(dto);
 
-            //valdiaciones
-            TurnIsExpired(turn, turnq);
-            TurnIsPast(turn, turnq);         
-            TurnDuplicateValidator(turn);
-            DateTimeRangeValidator(turn);
-            TurnIsPaid(turn, turnq);
-           
-			if (turnq != null)
-            {
-                turnq.TurnId = turn.TurnId;
-                turnq.TurnDateTime = turn.TurnDateTime;
-                turnq.ClientId = turn.ClientId;
-                turnq.Paid = turn.Paid;
-                turnq.Price = turn.Price;
-                //registrar movimiento
-                await GenerateMovement(turnq);
-                misCanchasDbContext.Update(turnq);
-            }
+            await Update(turn, false);
 
-            await misCanchasDbContext.SaveChangesAsync();
+            if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
         }
-        public async Task Delete(int id)
+
+        public async Task Delete(int id, bool saveChanges = false)
         {
             var turn = await misCanchasDbContext.Turns.FindAsync(id);
             if (turn != null)
@@ -76,7 +62,7 @@ namespace MisCanchas.Services
                     await DiscountMovement(turn);
                 }
                 misCanchasDbContext.Turns.Remove(turn);
-                await misCanchasDbContext.SaveChangesAsync();
+                if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
             }
         }
         public async Task<Turn> Get(int id)
@@ -84,12 +70,14 @@ namespace MisCanchas.Services
             var turn = await misCanchasDbContext.Turns.FirstOrDefaultAsync(t => t.TurnId == id);
             return turn;
         }
+
         public async Task<IQueryable<Turn>> GetByDateRange(DateTime startDateTime, DateTime endDateTime)
         {
             var turns = await misCanchasDbContext.Turns.Where(t => t.TurnDateTime >= startDateTime && t.TurnDateTime <= endDateTime).ToListAsync();
             var turnsq = turns.AsQueryable();
             return turnsq;
         }
+
         public async Task<IQueryable<Turn>> GetSingleTurnByDate(DateTime dateTime)
         {
             dateTime = dateTime.AddHours(-3); //UTC-3
@@ -97,11 +85,52 @@ namespace MisCanchas.Services
             var turnsq = turn.AsQueryable();
             return turnsq;
         }
+
         public async Task<IQueryable<Turn>> GetTurns()
         {
             var allTurns = await misCanchasDbContext.Turns.ToListAsync();
             var turnsq = allTurns.AsQueryable();
             return turnsq;
+        }
+
+        internal async Task<int> Create(Turn turn, bool saveChanges = false)
+        {
+            await misCanchasDbContext.AddAsync(turn);
+            if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
+            return turn.TurnId;
+        }
+
+        internal async Task Update(Turn turn, bool saveChanges = false)
+        {
+            Turn? originalTurn = await misCanchasDbContext.Turns.FindAsync(turn.TurnId);
+
+            if (originalTurn == null) throw new ArgumentException("Turn not found");
+
+            //valdiaciones
+            TurnIsExpired(turn, originalTurn);
+            TurnIsPast(turn, originalTurn);
+            TurnDuplicateValidator(turn);
+            DateTimeRangeValidator(turn);
+            TurnIsPaid(turn, originalTurn);
+
+            originalTurn.TurnId = turn.TurnId;
+            originalTurn.TurnDateTime = turn.TurnDateTime;
+            originalTurn.ClientId = turn.ClientId;
+            originalTurn.Paid = turn.Paid;
+            originalTurn.Price = turn.Price;
+
+            //registrar movimiento
+            await GenerateMovement(originalTurn);
+
+            misCanchasDbContext.Turns.Update(originalTurn);
+            if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
+        }
+
+        internal void ValidateTurn(Turn turn)
+        {
+            TurnIsPast(turn);
+            TurnDuplicateValidator(turn);
+            DateTimeRangeValidator(turn);
         }
 
         //validaciones
@@ -229,7 +258,7 @@ namespace MisCanchas.Services
         public class CustomTurnException : Exception
         {
             public string PropertyName { get; }
-            public CustomTurnException(string propertyName, string message) : base(message) 
+            public CustomTurnException(string propertyName, string message) : base(message)
             {
                 PropertyName = propertyName;
             }

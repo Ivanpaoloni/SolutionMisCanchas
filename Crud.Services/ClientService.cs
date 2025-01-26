@@ -1,57 +1,66 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using MisCanchas.Contracts.Dtos.Client;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MisCanchas.Services
 {
     public class ClientService : IClientService
     {
         private readonly MisCanchasDbContext misCanchasDbContext;
-
-        public ClientService(MisCanchasDbContext dbContext)
+        private readonly IMapper _mapper;
+        public ClientService(MisCanchasDbContext dbContext, IMapper mapper)
         {
             this.misCanchasDbContext = dbContext;
+            _mapper = mapper;
         }
-        public async Task Add(Client client)
+        public async Task<int> Create(ClientCreateDto client, bool saveChanges = false)
         {
-            await misCanchasDbContext.AddAsync(client);
-            await misCanchasDbContext.SaveChangesAsync();
+            var id = await Create(_mapper.Map<Client>(client), false);
+            if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
+            return id;
         }
-
-        public async Task Delete(int id, Client client)
+        internal async Task<int> Create(Client client, bool saveChanges = false)
         {
-            var clientDeleted = await misCanchasDbContext.Clients.FindAsync(client.ClientId);
-            if (clientDeleted != null)
-            {
-                misCanchasDbContext.Clients.Remove(clientDeleted);
-                await misCanchasDbContext.SaveChangesAsync();
-            }
-        }
+            var result = await misCanchasDbContext.AddAsync(client);
+            if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
 
-        public async Task Edit(int id, Client client)
+            return result.Entity.ClientId;
+        }
+        public async Task Delete(int id, bool saveChanges = false)
         {
-            var clientEdit = await misCanchasDbContext.Clients.FirstOrDefaultAsync(c => c.ClientId == id);
+            var client = await misCanchasDbContext.Clients.FindAsync(id);
+            if (client == null) throw new ArgumentException("Client not found");
 
-            if (clientEdit != null)
-            {
-                clientEdit.ClientName = client.ClientName;
-                clientEdit.NationalIdentityDocument = client.NationalIdentityDocument;
-                clientEdit.ClientEmail = client.ClientEmail;
-                clientEdit.ClientTelephone = client.ClientTelephone;
-
-                await misCanchasDbContext.SaveChangesAsync();
-
-            }
+            misCanchasDbContext.Clients.Remove(client);
+            if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
         }
 
+        public async Task Update(ClientUpdateDto client, bool saveChanges = false)
+        {
+            await Update(_mapper.Map<Client>(client), false);
 
-            public async Task<IQueryable<Client>> GetClients()
+            if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
+        }
+        internal async Task Update(Client client, bool saveChanges = false)
+        {
+            var clientEdit = await misCanchasDbContext.Clients.FirstOrDefaultAsync(c => c.ClientId == client.ClientId);
+
+            if (clientEdit == null) throw new ArgumentException("Client not found");
+
+            clientEdit.ClientName = client.ClientName;
+            clientEdit.NationalIdentityDocument = client.NationalIdentityDocument;
+            clientEdit.ClientEmail = client.ClientEmail;
+            clientEdit.ClientTelephone = client.ClientTelephone;
+
+            misCanchasDbContext.Clients.Update(clientEdit);
+            if (saveChanges) await misCanchasDbContext.SaveChangesAsync();
+
+        }
+
+        public async Task<IQueryable<Client>> GetClients()
         {
             var clients = await misCanchasDbContext.Clients.ToListAsync();
             var clientsq = clients.AsQueryable();
