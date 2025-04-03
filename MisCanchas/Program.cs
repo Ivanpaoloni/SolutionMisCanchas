@@ -11,6 +11,8 @@ using MisCanchas.Data;
 using MisCanchas.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using MisCanchas.Contracts;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,9 +22,9 @@ var AunthenticatedUserPolicy = new AuthorizationPolicyBuilder().RequireAuthentic
 
 
 // Add services to the container.
-builder.Services.AddControllersWithViews(opciones =>
+builder.Services.AddControllersWithViews(options =>
 {
-    opciones.Filters.Add(new AuthorizeFilter(AunthenticatedUserPolicy));
+    options.Filters.Add(new AuthorizeFilter(AunthenticatedUserPolicy));
 });
 builder.Services.AddDbContext<MisCanchasDbContext>(options =>
     options.UseSqlServer(builder.Configuration
@@ -35,6 +37,8 @@ builder.Services.AddTransient<IFieldService, FieldService>();
 builder.Services.AddTransient<IReportService, ReportService>();
 builder.Services.AddTransient<IMovementService, MovementService>();
 builder.Services.AddTransient<ICashService, CashService>();
+
+builder.Services.AddMisCanchasContracts();
 //aqui van los servicios
 
 //agrego autenticacion, db y roles

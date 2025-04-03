@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
+using MisCanchas.Domain;
 using MisCanchas.Models;
-using MisCanchas.Services;
 
 namespace MisCanchas.Controllers
 {

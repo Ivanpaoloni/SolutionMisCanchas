@@ -1,17 +1,13 @@
-﻿using MisCanchas.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MisCanchas.Contracts.Dtos.Client;
+using MisCanchas.Domain.Entities;
 
 namespace MisCanchas.Contracts.Services
 {
     public interface IClientService
     {
-        Task Add(Client client);
-        Task Delete(int id, Client client);
-        Task Edit(int id, Client client);
+        Task<int> Create(ClientCreateDto client, bool saveChanges = false);
+        Task Update(ClientUpdateDto client, bool saveChanges = false);
+        Task Delete(int id, bool saveChanges = false);
         Task<IQueryable<Client>> GetClients();
         Task<Client> GetSingleClient(int id);
     }

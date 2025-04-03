@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Principal;
 
 namespace MisCanchas.Domain.Entities
 {

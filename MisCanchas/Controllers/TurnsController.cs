@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MisCanchas.Contracts.Dtos.Turn;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
@@ -32,7 +33,8 @@ namespace MisCanchas.Controllers
         public async Task<IActionResult> Index()
         {
             //paso el nombre de la cancha por viewbag
-            var fieldName = _fieldService.Get().Result.Name;
+            var field = await _fieldService.Get();
+            var fieldName = field.Name;
             ViewBag.FieldName = fieldName;
             return View();
         }
@@ -103,7 +105,8 @@ namespace MisCanchas.Controllers
             if (!dateTime.HasValue)
             {
                 //si es un nuevo turno sin fecha seleccionada, se asigna el dia actual, con la hora actual +1.
-                dateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour + 1, 0, 0);
+                DateTime actual = DateTime.Now.AddHours(1);
+                dateTime = new DateTime(actual.Year, actual.Month, actual.Day, actual.Hour, 0, 0);
 
             }
             else
@@ -150,7 +153,15 @@ namespace MisCanchas.Controllers
             try
             {
                 var turns = await _turnService.GetTurns();
-                await _turnService.Add(viewModel.TurnDateTime, viewModel.ClientId, viewModel.Price, viewModel.Paid);
+
+                var turn = new TurnCreateDto()
+                {
+                    TurnDateTime = viewModel.TurnDateTime,
+                    ClientId = viewModel.ClientId,
+                    Price = viewModel.Price,
+                    Paid = viewModel.Paid
+                };
+                await _turnService.Create(turn, true);
                 return RedirectToAction("Index");
             }
             catch (CustomTurnException ex)
@@ -217,17 +228,17 @@ namespace MisCanchas.Controllers
             try
             {
                 var turns = await _turnService.GetTurns();
-                Turn turn = new Turn
+
+                TurnUpdateDto turn = new()
                 {
                     TurnId = viewModel.TurnId,
                     TurnDateTime = viewModel.TurnDateTime,
-                    //Client = await _clientService.GetSingleClient(viewModel.ClientId),
                     ClientId = viewModel.ClientId,
                     Price = viewModel.Price,
                     Paid = viewModel.Paid
                 };
 
-                await _turnService.Update(turn);
+                await _turnService.Update(turn, true);
 
                 return RedirectToAction("Index");
             }
@@ -298,7 +309,7 @@ namespace MisCanchas.Controllers
                     report.Canceled++;
                     await _reportService.Update(report);
                 }
-                await _turnService.Delete(model.TurnId);
+                await _turnService.Delete(model.TurnId, true);
                 return RedirectToAction("Index");
             }
             catch (CustomTurnException ex)

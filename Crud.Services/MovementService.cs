@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using MisCanchas.Contracts.Dtos.Cash;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
@@ -18,11 +20,13 @@ namespace MisCanchas.Services
 
         private readonly MisCanchasDbContext _misCanchasDbContext;
         private readonly ICashService cashService;
+        private readonly IMapper _mapper;
 
-        public MovementService(MisCanchasDbContext misCanchasDbContext, ICashService cashService)
+        public MovementService(MisCanchasDbContext misCanchasDbContext, ICashService cashService, IMapper mapper)
         {
             this._misCanchasDbContext = misCanchasDbContext;
             this.cashService = cashService;
+            this._mapper = mapper;
         }
         //Movements
         public async Task<IQueryable<Movement>> Get(int? id = null, MovementType? movementType = null, DateTime? date = null)
@@ -62,7 +66,9 @@ namespace MisCanchas.Services
         }
         public async Task Add(Movement movement)
         {
-            var cash = await cashService.Get();
+            var cash = cashService.GetDto();
+            var cashUpdateDto = _mapper.Map<CashUpdateDto>(cash);
+
             movement.MovementType = await GetTypeById(movement.MovementTypeId);
 
             //validacion si posee suficientes fondos
@@ -70,20 +76,14 @@ namespace MisCanchas.Services
             {
                 throw new CustomMovementException("Amount", "No hay suficiente saldo para retirar.");
             }
-
+            if (!movement.MovementType.Incremental) { movement.Amount = -movement.Amount; }
+            //TODO: REVISAR SI FUNCIONA CORRECTAMENTE EL AMMOUNT
             movement.DateTime = DateTime.Now;
-            if (movement.MovementType.Incremental == true)
-            {
-                movement.CurrentBalance = cash.Amount + movement.Amount;
-                await cashService.Update(movement.Amount);
-            }
-            else
-            {
-                //movement type is not incremental
-                movement.CurrentBalance = cash.Amount - movement.Amount;
-                await cashService.Update(-movement.Amount);
-                movement.Amount = -movement.Amount;
-            }
+
+            cashUpdateDto.Amount += movement.Amount;
+            movement.CurrentBalance = cash.Amount + movement.Amount;
+            cashService.UpdateDto(cashUpdateDto, true);
+
             await _misCanchasDbContext.Movements.AddAsync(movement);
             await _misCanchasDbContext.SaveChangesAsync();
         }

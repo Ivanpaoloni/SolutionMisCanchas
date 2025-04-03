@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MisCanchas.Contracts.Dtos.Client;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
@@ -20,10 +21,10 @@ namespace MisCanchas.Controllers
             this._clientService = clientService;
         }
 
-        
-        public async Task <IActionResult> Index()
+
+        public async Task<IActionResult> Index()
         {
-            
+
             var clients = await _clientService.GetClients();
             //ordeno para mostar listado alfabetico por defecto
             clients = clients.OrderBy(c => c.ClientName).ToList().AsQueryable();
@@ -37,7 +38,7 @@ namespace MisCanchas.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add( string urlRetorno = null)
+        public IActionResult Add(string? urlRetorno = null)
         {
             //si la url esta vacia, por defecto redireccionar a /clients.
             if (urlRetorno is null)
@@ -54,7 +55,7 @@ namespace MisCanchas.Controllers
         public async Task<IActionResult> Add(AddClientViewModel addClientViewModel)
         {
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(addClientViewModel);
             }
@@ -68,7 +69,7 @@ namespace MisCanchas.Controllers
                 return View(addClientViewModel);
             }
 
-            Client client = new Client
+            ClientCreateDto client = new()
             {
                 ClientEmail = addClientViewModel.ClientEmail,
                 ClientName = addClientViewModel.ClientName,
@@ -76,7 +77,7 @@ namespace MisCanchas.Controllers
                 NationalIdentityDocument = addClientViewModel.NationalIdentityDocument,
             };
 
-            await _clientService.Add(client);
+            var clientId = await _clientService.Create(client, true);
 
 
             if (string.IsNullOrEmpty(addClientViewModel.UrlRetorno))
@@ -85,12 +86,12 @@ namespace MisCanchas.Controllers
             }
             else
             {
-                return LocalRedirect(addClientViewModel.UrlRetorno + "&clientId=" + client.ClientId);
+                return LocalRedirect(addClientViewModel.UrlRetorno + "&clientId=" + clientId);
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> View(int id) 
+        public async Task<IActionResult> View(int id)
         {
             var singleClient = _clientService.GetSingleClient(id);
             if (singleClient != null)
@@ -103,7 +104,7 @@ namespace MisCanchas.Controllers
                     ClientTelephone = singleClient.Result.ClientTelephone,
                     ClientId = singleClient.Result.ClientId,
                 };
-                return await Task.Run(() => View("View" ,viewModel));
+                return await Task.Run(() => View("View", viewModel));
             }
             return View("Index");
         }
@@ -126,15 +127,16 @@ namespace MisCanchas.Controllers
                 return await Task.Run(() => View("View", updateClientViewModel));
             }
 
-            Client client = new Client { 
+            ClientUpdateDto client = new()
+            {
+                ClientId = updateClientViewModel.ClientId,
                 ClientEmail = updateClientViewModel.ClientEmail,
-                ClientId=updateClientViewModel.ClientId,
                 ClientName = updateClientViewModel.ClientName,
-                ClientTelephone=updateClientViewModel.ClientTelephone,
+                ClientTelephone = updateClientViewModel.ClientTelephone,
                 NationalIdentityDocument = updateClientViewModel.NationalIdentityDocument,
 
             };
-            await _clientService.Edit(updateClientViewModel.ClientId, client);
+            await _clientService.Update(client, true);
             return RedirectToAction("Index");
         }
 
@@ -148,27 +150,18 @@ namespace MisCanchas.Controllers
                 {
                     ClientId = singleClient.Result.ClientId,
                     ClientName = singleClient.Result.ClientName,
-                    ClientEmail= singleClient.Result.ClientEmail,
-                    ClientTelephone= singleClient.Result.ClientTelephone,
-                    NationalIdentityDocument= singleClient.Result.NationalIdentityDocument,
+                    ClientEmail = singleClient.Result.ClientEmail,
+                    ClientTelephone = singleClient.Result.ClientTelephone,
+                    NationalIdentityDocument = singleClient.Result.NationalIdentityDocument,
                 };
                 return await Task.Run(() => View("Delete", viewModel));
             }
             return RedirectToAction("Index");
-            }
+        }
         [HttpPost]
         public async Task<IActionResult> Delete(UpdateClientViewModel model)
         {
-            Client client = new Client
-            {
-                ClientEmail = model.ClientEmail,
-                ClientId = model.ClientId,
-                ClientName = model.ClientName,
-                ClientTelephone = model.ClientTelephone,
-                NationalIdentityDocument = model.NationalIdentityDocument,
-
-            };
-            await _clientService.Delete(model.ClientId, client);
+            await _clientService.Delete(model.ClientId, true);
             return RedirectToAction("Index");
         }
     }

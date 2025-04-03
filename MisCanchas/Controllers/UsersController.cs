@@ -1,30 +1,35 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using MisCanchas.Contracts.Dtos.User;
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
+using MisCanchas.Domain;
 using MisCanchas.Models;
-using MisCanchas.Services;
+using System.Reflection.Metadata;
 
 namespace MisCanchas.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
-        private readonly MisCanchasDbContext context;
-        private readonly IUserService userService;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly MisCanchasDbContext _context;
+        private readonly IUserService _userService;
 
-        public UsersController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, MisCanchasDbContext context, IUserService userService)
+        public UsersController
+        (
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            MisCanchasDbContext context,
+            IUserService userService
+        )
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.context = context;
-            this.userService = userService;
+            this._userManager = userManager;
+            this._signInManager = signInManager;
+            this._context = context;
+            this._userService = userService;
         }
 
         [Authorize(Roles = Constants.RollAdmin)]
@@ -42,12 +47,12 @@ namespace MisCanchas.Controllers
             {
                 return View(model);
             }
-
-            //var user = new IdentityUser() { Email = model.Email, UserName = model.Email };
-            //var result = await userManager.CreateAsync(user, password: model.Password);
-
-            var result = await userService.Create(model.Email, model.Password);
-
+            var result = await _userService.Create(new UserCreateDto
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                Password = model.Password
+            });
 
             if (result.Succeeded)
             {
@@ -62,7 +67,7 @@ namespace MisCanchas.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
 
                 }
-                return View (model);
+                return View(model);
             }
         }
 
@@ -70,10 +75,10 @@ namespace MisCanchas.Controllers
         public IActionResult Login()
         {
             //if usersList is empty, create an admin user.
-            var usersExist = userService.List().Result.Count();
+            var usersExist = _userService.List().Result.Count();
             if (usersExist == 0)
             {
-                userService.CreateDefaultUser();
+                _userService.CreateDefaultUser();
                 TurnAdmin("admin@admin").GetAwaiter().GetResult();
             }
 
@@ -82,15 +87,20 @@ namespace MisCanchas.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginViewModel modelo)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(modelo);
+                return View(model);
             }
 
-            var result = await signInManager.PasswordSignInAsync(modelo.Email,
-                modelo.Password, modelo.RememberMe, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync
+                (
+                    model.UserName,
+                    model.Password,
+                    model.RememberMe,
+                    lockoutOnFailure: false
+                );
 
             if (result.Succeeded)
             {
@@ -100,7 +110,7 @@ namespace MisCanchas.Controllers
             else
             {
                 ModelState.AddModelError(string.Empty, "Nombre de usuario o password incorrecto.");
-                return View(modelo);
+                return View(model);
             }
 
         }
@@ -114,16 +124,22 @@ namespace MisCanchas.Controllers
 
         [HttpGet]
         [Authorize(Roles = Constants.RollAdmin)]
-        public async Task<IActionResult> List(string message = null)
+        public async Task<IActionResult> List(string? message = null)
         {
-            //var users = await context.Users.Select(u => new UserViewModel {Email = u.Email}).ToListAsync();
-            var users = await userService.List();
-            //users.AsEnumerable();
-            var usersList = users.Select(u => new UserViewModel { Email = u.Email}).ToList();
+            var users = await _userService.List();
+            var usersList = users.Select(u => new UserViewModel { Email = u.Email, UserName = u.UserName }).ToList();
             var model = new UsersListViewModel();
-            foreach (var user in usersList)
+            if (usersList != null)
             {
-                user.IsAdmin = userService.IsAdmin(user.Email).Result;
+                foreach (var user in usersList)
+                {
+                    if (user.Email != null)
+                    {
+                        user.IsAdmin = await this._userService.IsAdmin(user.Email);
+                        var rol = await this._userService.GetRole(user.Email);
+                        user.Role = rol.ToString();
+                    }
+                }
             }
             model.Users = usersList;
             model.Message = message;
@@ -134,14 +150,17 @@ namespace MisCanchas.Controllers
         [Authorize(Roles = Constants.RollAdmin)]
         public async Task<IActionResult> EditRol(UserViewModel model)
         {
-            model.IsAdmin = userService.IsAdmin(model.Email).Result;
             if (!ModelState.IsValid)
+            {
+                return NotFound();
+            }
+            if (model.Email == null)
             {
                 return NotFound();
             }
 
             //validacion para no editar el administrador en uso.
-            if (User.Identity.Name == model.Email)
+            if (User?.Identity?.Name == model.UserName)
             {
                 return RedirectToAction("List", routeValues: new { message = "No puede editar una cuenta en uso." });
 
@@ -154,56 +173,58 @@ namespace MisCanchas.Controllers
         [Authorize(Roles = Constants.RollAdmin)]
         public async Task<IActionResult> Delete(UserViewModel model)
         {
-            model.IsAdmin = userService.IsAdmin(model.Email).Result;
             if (!ModelState.IsValid)
             {
                 return NotFound();
             }
-
+            if (model.Email == null)
+            {
+                return NotFound();
+            }
             //validacion para no editar el administrador en uso.
-            if (User.Identity.Name == model.Email)
+            if (User?.Identity?.Name == model.Email)
             {
                 return RedirectToAction("Delete", routeValues: new { message = "No puede eliminar una cuenta en uso." });
 
             }
-            var user = await userService.Get(model.Email);
+            model.IsAdmin = await _userService.IsAdmin(model.Email);
 
+            var user = await _userService.Get(model.Email);
             if (user == null)
             {
                 return NotFound();
             }
-            await userService.Delete(model.Email);
+            _userService.Delete(model.Email);
             return RedirectToAction("List", routeValues: new { message = "Se ha eliminado correctamente el usuario " + model.Email });
         }
-
 
         [HttpPost]
         [Authorize(Roles = Constants.RollAdmin)]
         public async Task<IActionResult> TurnAdmin(string email)
         {
-            //var user = await context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
-            var user = await userService.Get(email);
-
+            var user = await _userService.Get(email);
             if (user == null)
             {
                 return NotFound();
             }
-            await userManager.AddToRoleAsync(user, Constants.RollAdmin);
-            return RedirectToAction("List", routeValues: new {message = "Rol asignado correctamente a " + email });
+
+            await _userService.RemoveRol(user, Constants.RollUser);
+            await _userService.AddRol(user, Constants.RollAdmin);
+            return RedirectToAction("List", routeValues: new { message = "Rol asignado correctamente a " + email });
         }
 
         [HttpPost]
         [Authorize(Roles = Constants.RollAdmin)]
         public async Task<IActionResult> RemoveAdmin(string email)
         {
-            //var user = await context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
-            var user = await userService.Get(email);
+            var user = await _userService.Get(email);
             if (user == null)
             {
                 return NotFound();
             }
 
-            await userManager.RemoveFromRoleAsync(user, Constants.RollAdmin);
+            await _userService.RemoveRol(user, Constants.RollAdmin);
+            await _userService.AddRol(user, Constants.RollUser);
             return RedirectToAction("List", routeValues: new { message = "Rol quitado correctamente a " + email });
         }
     }
