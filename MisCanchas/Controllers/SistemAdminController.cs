@@ -33,11 +33,12 @@ namespace MisCanchas.Controllers
         public async Task<IActionResult> FieldsAdjust()
         {
             var field = new AdminFieldViewModel();
-            var field1 = await fieldService.Get();
-            field.OpenHour = field1.OpenHour;
-            field.CloseHour = field1.CloseHour;
-            field.Name = field1.Name;
-            field.Price = field1.Price;
+            var dbField = await fieldService.Get();
+            field.OpenHour = dbField.OpenHour;
+            field.CloseHour = dbField.CloseHour;
+            field.Name = dbField.Name;
+            field.Price = dbField.Price;
+            field.Deposit = dbField.Deposit;
             return View(field);
         }
 
@@ -50,7 +51,7 @@ namespace MisCanchas.Controllers
                 return View(model);
             }
 
-            await fieldService.Update(model.OpenHour, model.CloseHour, model.Name, model.Price);
+            await fieldService.Update(model.OpenHour, model.CloseHour, model.Name, model.Price, model.Deposit);
             return RedirectToAction("Index");
 
         }

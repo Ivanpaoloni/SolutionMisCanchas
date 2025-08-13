@@ -11,23 +11,32 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="mb-3">
         <label asp-for="Name" class="form-label">Nombre de la cancha:</label>
-        <input asp-for="Name" class="form-control"/>
+        <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="OpenHour" class="form-label">Horario de apertura:</label>
-        <input asp-for="OpenHour" class="form-control" min="0" max="24" />
-        <span asp-validation-for="OpenHour" class="text-danger"></span>
+    <div class="row">
+        <div class="mb-3 col-md">
+            <label asp-for="OpenHour" class="form-label">Horario de apertura:</label>
+            <input asp-for="OpenHour" class="form-control" min="0" max="24" />
+            <span asp-validation-for="OpenHour" class="text-danger"></span>
+        </div>
+        <div class="mb-3 col-md">
+            <label asp-for="CloseHour" class="form-label">Horario de cierre:</label>
+            <input asp-for="CloseHour" class="form-control" min="0" max="24" />
+            <span asp-validation-for="CloseHour" class="text-danger"></span>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="CloseHour" class="form-label">Horario de cierre:</label>
-        <input asp-for="CloseHour" class="form-control"  min="0" max="24"/>
-        <span asp-validation-for="CloseHour" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Price" class="form-label">Precio de reserva para "@Model.Name":</label>
-        <input asp-for="Price" class="form-control"/>
-        <span asp-validation-for="Price" class="text-danger"></span>
+    <div class="row">
+        <div class="mb-3 col-md">
+            <label asp-for="Price" class="form-label">Precio de reserva para "@Model.Name":</label>
+            <input asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="mb-3 col-md">
+            <label asp-for="Deposit" class="form-label">Precio seña de reserva para "@Model.Name":</label>
+            <input asp-for="Deposit" class="form-control" />
+            <span asp-validation-for="Deposit" class="text-danger"></span>
+        </div>
     </div>
     <button type="submit" class="btn btn-success">Guardar cambios</button>
     <a class="btn btn-secondary" asp-action="Index">Cancelar</a>

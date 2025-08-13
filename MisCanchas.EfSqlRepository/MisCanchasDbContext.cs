@@ -13,7 +13,6 @@ namespace MisCanchas.Data
         {
         }
 
-
         public DbSet<Turn> Turns { get; set; }
         public DbSet<Client> Clients { get; set; } 
         public DbSet<Field> Fields { get; set; } 

@@ -2,11 +2,6 @@
 using MisCanchas.Contracts.Services;
 using MisCanchas.Data;
 using MisCanchas.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MisCanchas.Services
 {
@@ -20,9 +15,13 @@ namespace MisCanchas.Services
         public async Task<Field> Get()
         {
             var field = await misCanchasDbContext.Fields.FirstOrDefaultAsync();
-            return field;
+
+            if (field == null)
+                throw new Exception("No se encontró la cancha. Asegúrate de que exista al menos una en la base de datos.");
+            else
+                return field;
         }
-        public async Task Update(int openHour, int closeHour, string name, decimal price)
+        public async Task Update(int openHour, int closeHour, string name, decimal price, decimal deposit)
         {
             var field = await Get();
             if (field != null)
@@ -31,6 +30,7 @@ namespace MisCanchas.Services
                 field.CloseHour = closeHour;
                 field.Name = name;
                 field.Price = price;
+                field.Deposit = deposit;
                 misCanchasDbContext.Fields.Update(field);
                 await misCanchasDbContext.SaveChangesAsync();
             }

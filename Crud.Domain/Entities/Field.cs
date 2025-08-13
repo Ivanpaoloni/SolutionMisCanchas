@@ -13,5 +13,6 @@ namespace MisCanchas.Domain.Entities
         public string Name { get; set; }
         [Required]
         public decimal Price { get; set; }
+        public decimal Deposit { get; set; }
     }
 }
